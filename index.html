@@ -484,9 +484,9 @@ details.history summary { cursor: pointer; font-weight: 600; color: var(--accent
 
 <div class="wrap">
   <header>
-    <p class="eyebrow" id="hEyebrow">6 uger · 3 programmer · 30 sek arbejde / 30 sek pause · 5 runder</p>
+    <p class="eyebrow" id="hEyebrow">3 programmer · 6 dage om ugen · 30/30 sek · 5 runder</p>
     <h1 id="hHello">Hej Louise</h1>
-    <p class="lede" id="hLede">Seks træningspas om ugen med tre forskellige programmer. Hver øvelse laves i 5 runder.</p>
+    <p class="lede" id="hLede">Tre programmer, der kører på skift mandag til lørdag, uge efter uge. Søndag er hviledag.</p>
   </header>
 
   <div class="banner" id="reminder" hidden role="status"></div>
@@ -519,7 +519,7 @@ details.history summary { cursor: pointer; font-weight: 600; color: var(--accent
   <h2>Dine fremskridt</h2>
   <div class="card">
     <div class="stats" id="stats"></div>
-    <div class="cal" id="cal" aria-label="Kalender over de 6 uger"></div>
+    <div class="cal" id="cal" aria-label="Kalender over de seneste uger"></div>
     <div class="legend"><span><i style="background:var(--accent)"></i>Gennemført</span><span><i style="border:1.5px dashed var(--rest)"></i>Ikke nået</span><span><i style="border:1px solid var(--line)"></i>Kommende</span></div>
     <details class="history" id="history"><summary></summary><ul class="histlist" id="histList"></ul></details>
   </div>
@@ -540,9 +540,9 @@ details.history summary { cursor: pointer; font-weight: 600; color: var(--accent
   <h2>Progression</h2>
   <div class="card">
     <ul class="plain">
-      <li><strong>Uge 1–2:</strong> let belastning og lavere tempo. Fokus på teknik.</li>
-      <li><strong>Uge 3–4:</strong> tungere håndvægte, lavere knæ-variant eller hurtigere tempo.</li>
-      <li><strong>Uge 5–6:</strong> ekstra runde (6 i stedet for 5) på udvalgte øvelser, eller pausen forkortes til 20 sek.</li>
+      <li><strong>Kom i gang:</strong> let belastning og roligt tempo. Fokus på teknik.</li>
+      <li><strong>Når det føles let:</strong> tungere håndvægte, sværere variant eller hurtigere tempo.</li>
+      <li><strong>Klar til mere:</strong> ekstra runde (6 i stedet for 5) på udvalgte øvelser, eller pausen forkortes til 20 sek.</li>
     </ul>
   </div>
 
@@ -554,7 +554,7 @@ details.history summary { cursor: pointer; font-weight: 600; color: var(--accent
       <button type="button" id="btnIcs">Læg påmindelser i kalenderen</button>
     </div>
     <p class="small" id="notifyInfo"></p>
-    <label class="field"><span>Programmet startede</span><input type="date" id="setStart"></label>
+    <label class="field"><span>Jeg startede</span><input type="date" id="setStart"></label>
     <button type="button" class="linkish" id="btnReset">Nulstil fremskridt</button>
   </div>
 
@@ -667,8 +667,8 @@ function figSvg(p, q, name) {
 }
 
 const NAME = "Louise";
-const WEEKS = 6;
-const TOTAL = WEEKS * SCHEDULE.filter(([, p]) => p).length;
+const PER_WEEK = SCHEDULE.filter(([, p]) => p).length;
+const CAL_WEEKS = 6;
 const STORE_KEY = "louise-training-v1";
 
 /* Alt gemmes kun i Louises egen browser. */
@@ -735,14 +735,13 @@ function renderHeader(now) {
   const wk = weekOf(now);
   let eyebrow, lede;
   if (day < 0) {
-    eyebrow = `Starter ${SCHEDULE[dayIdx(parseYmd(store.start))][0].toLowerCase()} d. ${parseYmd(store.start).getDate()}/${parseYmd(store.start).getMonth() + 1}`;
-    lede = "Dit 6-ugers program er klar. Vi ses på første træningsdag!";
-  } else if (wk > WEEKS) {
-    eyebrow = "Program gennemført";
-    lede = `Du har klaret ${Object.keys(store.done).length} af ${TOTAL} pas på 6 uger. Stærkt gået!`;
+    const st0 = parseYmd(store.start);
+    eyebrow = `Starter ${SCHEDULE[dayIdx(st0)][0].toLowerCase()} d. ${st0.getDate()}/${st0.getMonth() + 1}`;
+    lede = "Dit program er klar. Vi ses på første træningsdag!";
   } else {
-    eyebrow = `Uge ${wk} af ${WEEKS} · ${SCHEDULE[dayIdx(now)][0]}`;
-    lede = "Her er dagens træning. Du klarer det!";
+    const pas = passOn(now);
+    eyebrow = `${SCHEDULE[dayIdx(now)][0]} · ${pas ? `Pas ${pas}` : "Hviledag"} · Uge ${wk}`;
+    lede = pas ? "Her er dagens træning. Du klarer det!" : "I dag holder du fri. Det har du fortjent.";
   }
   $("hEyebrow").textContent = eyebrow;
   $("hHello").innerHTML = `${greeting(now)}, <em>${esc(NAME)}</em>`;
@@ -752,7 +751,7 @@ function renderHeader(now) {
 function renderToday(now) {
   const pas = passOn(now);
   const card = $("today");
-  const inProgram = programDay(now) >= 0 && weekOf(now) <= WEEKS;
+  const inProgram = programDay(now) >= 0;
   const done = isDone(now);
   card.classList.toggle("isdone", done);
 
@@ -788,7 +787,7 @@ function renderToday(now) {
 function renderReminder(now) {
   const el = $("reminder");
   const pas = passOn(now);
-  const inProgram = programDay(now) >= 0 && weekOf(now) <= WEEKS;
+  const inProgram = programDay(now) >= 0;
   let msg = "";
   if (inProgram && pas && !isDone(now) && reminderDue(now)) {
     msg = `${NAME}, du mangler stadig dagens træning (${PASSES[pas].title}). Der er tid endnu!`;
@@ -839,29 +838,34 @@ const longDate = (d) => `${SCHEDULE[dayIdx(d)][0]} d. ${d.getDate()}. ${MONTHS[d
 
 function renderStats(now) {
   const doneKeys = Object.keys(store.done).filter(k => k >= store.start).sort().reverse();
-  const curWeek = Math.min(Math.max(weekOf(now), 1), WEEKS);
+  const mon = mondayOf(now);
+  let thisWeek = 0;
+  for (let i = 0; i < 7; i++) if (isDone(addDays(mon, i))) thisWeek++;
   $("stats").innerHTML = `
-    <div class="stat"><b>${doneKeys.length}</b><span>af ${TOTAL} pas</span></div>
+    <div class="stat"><b>${doneKeys.length}</b><span>pas i alt</span></div>
     <div class="stat"><b>${streak(now)}</b><span>i træk</span></div>
-    <div class="stat"><b>${Math.max(0, Math.min(WEEKS, weekOf(now)))}</b><span>af ${WEEKS} uger</span></div>`;
+    <div class="stat"><b>${thisWeek}/${PER_WEEK}</b><span>denne uge</span></div>`;
 
-  const start = parseYmd(store.start);
+  /* De seneste uger, nyeste nederst. */
   const today = ymd(now);
   let html = `<div class="calhead"><span></span>${SCHEDULE.map(([d]) => `<span>${d.slice(0, 1)}</span>`).join("")}</div>`;
-  for (let w = 0; w < WEEKS; w++) {
+  for (let w = CAL_WEEKS - 1; w >= 0; w--) {
+    const wkStart = addDays(mon, -7 * w);
+    if (programDay(addDays(wkStart, 6)) < 0) continue;
     let cells = "";
-    SCHEDULE.forEach(([day, pas], i) => {
-      const d = addDays(start, w * 7 + i);
+    SCHEDULE.forEach(([, pas], i) => {
+      const d = addDays(wkStart, i);
       const key = ymd(d);
       const done = isDone(d);
+      const before = programDay(d) < 0;
       const cls = [
-        done ? "on" : pas ? (key < today ? "missed" : "train") : "rest",
+        done ? "on" : before || !pas ? "rest" : key < today ? "missed" : "train",
         key === today ? "today" : ""
       ].join(" ");
       const label = `${longDate(d)}: ${done ? "gennemført" : pas ? `Pas ${pas}` : "hviledag"}`;
       cells += `<span class="cd ${cls}" title="${label}" aria-label="${label}">${d.getDate()}</span>`;
     });
-    html += `<div class="calrow ${w + 1 === curWeek && programDay(now) >= 0 ? "cur" : ""}"><span>Uge ${w + 1}</span>${cells}</div>`;
+    html += `<div class="calrow ${w === 0 ? "cur" : ""}"><span>${w === 0 ? "Nu" : `Uge ${weekOf(wkStart)}`}</span>${cells}</div>`;
   }
   $("cal").innerHTML = html;
 
@@ -967,7 +971,7 @@ function scheduleReminder() {
   reminderTimer = setTimeout(() => {
     const d = new Date();
     const pas = passOn(d);
-    if (pas && !isDone(d) && programDay(d) >= 0 && weekOf(d) <= WEEKS) {
+    if (pas && !isDone(d) && programDay(d) >= 0) {
       showNotification(`Hej ${NAME}, tid til træning`, `Du mangler stadig ${PASSES[pas].title}: ${PASSES[pas].focus}.`);
     }
     renderAll();
@@ -1011,17 +1015,20 @@ function buildIcs() {
   const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+/, "");
   const dt = (d) => `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}T${pad(h)}${pad(m)}00`;
   const events = [];
-  for (let i = 0; i < WEEKS * 7; i++) {
-    const d = addDays(start, i);
+  /* Én gentagen begivenhed pr. træningsdag, uden slutdato. */
+  const first = parseYmd(ymd(new Date())) > start ? parseYmd(ymd(new Date())) : start;
+  for (let i = 0; i < 7; i++) {
+    const d = addDays(first, i);
     const pas = passOn(d);
     if (!pas) continue;
     const end = new Date(d); end.setHours(h, m + 35);
     events.push([
       "BEGIN:VEVENT",
-      `UID:louise-${ymd(d)}@louise-training`,
+      `UID:louise-dag${dayIdx(d)}@louise-training`,
       `DTSTAMP:${stamp}`,
       `DTSTART:${dt(d)}`,
       `DTEND:${end.getFullYear()}${pad(end.getMonth() + 1)}${pad(end.getDate())}T${pad(end.getHours())}${pad(end.getMinutes())}00`,
+      "RRULE:FREQ=WEEKLY",
       `SUMMARY:Træning: ${PASSES[pas].title} (${PASSES[pas].focus})`,
       `DESCRIPTION:Hej ${NAME}! Dagens træning: ${PASSES[pas].items.map(it => it.n).join(", ")}. Åbn appen og tryk Start.`,
       `URL:${location.href.split("#")[0]}`,

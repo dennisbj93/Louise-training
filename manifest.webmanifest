@@ -1,7 +1,7 @@
 {
   "name": "Louises træning",
   "short_name": "Træning",
-  "description": "Fuldkropsprogram over 6 uger med dagens træning, intervaltimer og påmindelser.",
+  "description": "Fuldkropsprogram i fast turnus med dagens træning, intervaltimer og påmindelser.",
   "lang": "da",
   "start_url": "./",
   "scope": "./",
