@@ -471,7 +471,7 @@ details.history summary { cursor: pointer; font-weight: 600; color: var(--accent
   overflow: hidden;
   background: var(--blush) center / cover no-repeat;
 }
-.player video { display: block; width: 100%; height: 100%; object-fit: cover; background: #000; }
+.player iframe, .tvid iframe { display: block; width: 100%; height: 100%; border: 0; background: #000; }
 .player .play {
   position: absolute; inset: 0; width: 100%; height: 100%;
   display: grid; place-items: center; align-content: center; gap: 8px;
@@ -521,7 +521,7 @@ body.timing { overflow: hidden; }
 body.timing .tabbar { display: none; }
 .tvid { display: none; margin: 10px 0 4px; border-radius: 18px; overflow: hidden; aspect-ratio: 16 / 9; background: var(--blush); }
 .tvid.has { display: block; }
-.tvid video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.tvid iframe { pointer-events: none; }
 #timer .big { font-size: clamp(72px, 24vw, 120px); margin: 2px 0 8px; }
 
 /* ---------- Top-design: lag, lys og bevægelse ---------- */
@@ -706,7 +706,7 @@ button:active { transform: scale(.97); }
 <section id="timer" hidden aria-live="polite">
   <div class="tinner">
     <div class="row"><span id="tPas"></span><span id="tEx"></span></div>
-    <div class="tvid" id="tVidBox"><video id="tVid" muted loop playsinline autoplay></video></div>
+    <div class="tvid" id="tVidBox"></div>
     <div class="phase" id="tPhase"></div>
     <div class="exname" id="tName"></div>
     <div class="ring">
@@ -819,54 +819,20 @@ const esc = (s) => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt
 
 const satsPage = (it) => `https://www.sats.dk/ovelser/${it.slug}`;
 
-/* ---------- SATS-videoer ---------- */
-const videoCache = new Map();
-function videoInfo(slug) {
-  if (!videoCache.has(slug)) {
-    const req = location.protocol.startsWith("http")
-      ? fetch(`api/video?slug=${encodeURIComponent(slug)}`).then(r => r.json()).catch(() => ({}))
-      : Promise.resolve({});
-    videoCache.set(slug, req);
-  }
-  return videoCache.get(slug);
+/* ---------- SATS-videoer (SATS hoster dem på YouTube) ---------- */
+function ytSrc(id, opts = {}) {
+  const q = new URLSearchParams({
+    playsinline: "1", rel: "0", modestbranding: "1", loop: "1", playlist: id,
+    mute: opts.autoplay ? "1" : "0", autoplay: opts.autoplay ? "1" : "0", controls: opts.autoplay ? "0" : "1"
+  });
+  return `https://www.youtube-nocookie.com/embed/${id}?${q}`;
 }
 
 function playerHtml(it) {
-  return `<div class="player" data-slug="${esc(it.slug)}">
-    <button type="button" class="play" data-play="${esc(it.slug)}" aria-label="Afspil video af ${esc(it.n)}"><span class="playicon"></span><span class="playtxt">Se video</span></button>
-  </div>`;
+  if (!it.yt) return "";
+  return `<div class="player"><iframe src="${ytSrc(it.yt)}" title="Video: ${esc(it.n)}" loading="lazy"
+    allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div>`;
 }
-
-const posterObserver = "IntersectionObserver" in window ? new IntersectionObserver((entries) => {
-  entries.forEach(async (e) => {
-    if (!e.isIntersecting) return;
-    posterObserver.unobserve(e.target);
-    const info = await videoInfo(e.target.dataset.slug);
-    if (info.poster) e.target.style.backgroundImage = `url("${info.poster}?w=640&fm=webp")`;
-  });
-}, { rootMargin: "200px" }) : null;
-
-function watchPosters(root) {
-  if (posterObserver) root.querySelectorAll(".player[data-slug]").forEach(el => posterObserver.observe(el));
-}
-
-async function playIn(box) {
-  const slug = box.dataset.slug;
-  box.classList.add("loading");
-  const info = await videoInfo(slug);
-  box.classList.remove("loading");
-  if (!info.video) {
-    window.open(`https://www.sats.dk/ovelser/${slug}`, "_blank", "noopener");
-    return;
-  }
-  document.querySelectorAll(".player video").forEach(v => v.pause());
-  box.innerHTML = `<video src="${esc(info.video)}" ${info.poster ? `poster="${esc(info.poster)}?w=640"` : ""} controls playsinline autoplay loop muted></video>`;
-}
-
-document.addEventListener("click", (e) => {
-  const b = e.target.closest("button[data-play]");
-  if (b) playIn(b.closest(".player"));
-});
 
 const NAME = "Louise";
 const PER_WEEK = SCHEDULE.filter(([, p]) => p).length;
@@ -1334,7 +1300,6 @@ function renderPass() {
         </div>
       </div>`).join("")}
   `;
-  watchPosters($("passView"));
 }
 
 $("passTabs").addEventListener("click", (e) => {
@@ -1456,19 +1421,14 @@ function render() {
   $("timer").dataset.phase = s.type;
 }
 
-let timerSlug = "";
-async function setTimerVideo(it) {
-  if (timerSlug === it.slug) return;
-  timerSlug = it.slug;
-  const v = $("tVid");
-  v.removeAttribute("src");
-  $("tVidBox").classList.remove("has");
-  const info = await videoInfo(it.slug);
-  if (timerSlug !== it.slug || !info.video) return;
-  v.src = info.video;
-  if (info.poster) v.poster = info.poster + "?w=640";
-  $("tVidBox").classList.add("has");
-  v.play().catch(() => {});
+let timerYt = "";
+function setTimerVideo(it) {
+  if (timerYt === (it.yt || "")) return;
+  timerYt = it.yt || "";
+  $("tVidBox").classList.toggle("has", Boolean(timerYt));
+  $("tVidBox").innerHTML = timerYt
+    ? `<iframe src="${ytSrc(timerYt, { autoplay: true })}" title="Video: ${esc(it.n)}" allow="autoplay; encrypted-media" tabindex="-1"></iframe>`
+    : "";
 }
 
 function togglePause() {
@@ -1516,7 +1476,8 @@ function finish() {
   $("btnStop").textContent = "Luk";
   $("btnPause").hidden = true;
   $("btnSkip").hidden = true;
-  $("tVid").pause();
+  $("tVidBox").innerHTML = "";
+  timerYt = "";
 }
 
 function stopSession(silent) {
@@ -1524,8 +1485,8 @@ function stopSession(silent) {
   st.timer = null;
   st.running = false;
   releaseAwake();
-  $("tVid").pause();
-  timerSlug = "";
+  $("tVidBox").innerHTML = "";
+  timerYt = "";
   if (!silent) {
     $("timer").hidden = true;
     document.body.classList.remove("timing");
