@@ -1,0 +1,703 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f3f4ef">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Fuldkrop">
+<title>Fuldkropsprogram 6 uger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=JetBrains+Mono:wght@500..700&display=swap">
+<style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<style>
+:root {
+  --bg: #f3f4ef;
+  --surface: #ffffff;
+  --fg: #161d19;
+  --muted: #5b685f;
+  --line: #d8ddd3;
+  --accent: #1d6a4d;
+  --accent-fg: #ffffff;
+  --work: #1d6a4d;
+  --rest: #b5581d;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1411;
+    --surface: #161f1a;
+    --fg: #ecf1ea;
+    --muted: #98a69c;
+    --line: #2a362f;
+    --accent: #5cc195;
+    --accent-fg: #0e1411;
+    --work: #5cc195;
+    --rest: #e89a58;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1411;
+  --surface: #161f1a;
+  --fg: #ecf1ea;
+  --muted: #98a69c;
+  --line: #2a362f;
+  --accent: #5cc195;
+  --accent-fg: #0e1411;
+  --work: #5cc195;
+  --rest: #e89a58;
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 640px; margin: 0 auto; padding-block: 24px 48px; }
+img { max-width: 100%; }
+
+.eyebrow { margin: 0 0 8px; color: var(--muted); font-size: 13px; letter-spacing: .04em; }
+h1 {
+  margin: 0 0 8px;
+  font-stretch: 88%;
+  font-weight: 800;
+  font-size: clamp(32px, 9vw, 42px);
+  line-height: 1.05;
+  text-wrap: balance;
+}
+.lede { margin: 0 0 8px; color: var(--muted); }
+
+h2 {
+  margin: 32px 0 12px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px;
+  min-width: 0;
+}
+
+.days { display: grid; gap: 6px; }
+.day {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+.day.today { border-color: var(--accent); }
+.day strong { font-weight: 700; }
+.pill {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 99px;
+  background: var(--accent);
+  color: var(--accent-fg);
+  font-variant-numeric: tabular-nums;
+}
+.pill.ghost { background: transparent; color: var(--muted); border: 1px solid var(--line); }
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--fg);
+  padding: 10px 14px;
+  min-height: 44px;
+}
+button.primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); font-weight: 700; }
+button[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.tabs button { flex: 1 1 0; min-width: 0; }
+
+.passhead { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+.passhead strong { font-size: 20px; font-weight: 800; font-stretch: 92%; }
+.start { width: 100%; margin: 8px 0 4px; }
+
+.ex {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 12px;
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+}
+.ex:first-of-type { border-top: 0; padding-top: 4px; }
+.ex .n { font-family: "JetBrains Mono", ui-monospace, monospace; color: var(--muted); font-variant-numeric: tabular-nums; }
+.ex h3 { margin: 0 0 4px; font-size: 17px; font-weight: 700; text-wrap: balance; }
+.ex ol { margin: 0 0 6px; padding-left: 18px; font-size: 15px; }
+.ex ol li { margin-bottom: 2px; }
+.ex .alt { margin-top: 4px; font-size: 14px; color: var(--muted); }
+.ex .alt b { color: var(--fg); font-weight: 600; }
+
+.fig {
+  display: block;
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  margin: 2px 0 8px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.fig * { stroke: var(--fg); fill: none; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+.fig circle { fill: var(--fg); stroke: none; }
+.fig .floor { stroke: var(--line); stroke-width: 2; }
+
+#timer { margin-bottom: 8px; }
+.row { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; color: var(--muted); font-size: 14px; font-variant-numeric: tabular-nums; }
+.phase { margin-top: 12px; font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--work); }
+.phase.rest { color: var(--rest); }
+.phase.skift { color: var(--muted); }
+.exname { margin-top: 4px; font-size: clamp(22px, 6vw, 28px); font-weight: 800; font-stretch: 92%; line-height: 1.15; text-wrap: balance; }
+.big {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-weight: 700;
+  font-size: clamp(72px, 26vw, 120px);
+  line-height: 1.05;
+  text-align: center;
+  margin: 10px 0 6px;
+  font-variant-numeric: tabular-nums;
+}
+.bar { height: 8px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: var(--work); }
+.bar i.rest { background: var(--rest); }
+.bar i.skift { background: var(--muted); }
+.controls { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+.controls button { flex: 1 1 0; min-width: 0; }
+
+ul.plain { margin: 0; padding-left: 18px; }
+ul.plain li { margin-bottom: 6px; }
+.note { font-size: 14px; color: var(--muted); margin: 16px 0 0; }
+/* ---------- Styling v5 ---------- */
+body {
+  background:
+    radial-gradient(1200px 400px at 100% -10%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 60%),
+    var(--bg);
+}
+header { padding-top: 8px; margin-bottom: 8px; }
+.eyebrow {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 99px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .02em;
+  margin-bottom: 14px;
+}
+h1 { font-size: clamp(36px, 10vw, 52px); letter-spacing: -.02em; font-weight: 800; }
+.lede { font-size: 17px; color: var(--muted); max-width: 46ch; }
+
+h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 36px 0 14px;
+  font-size: 12px;
+  color: var(--fg);
+}
+h2::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+.card {
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 12px 28px -18px rgba(0,0,0,.25);
+}
+
+.days { grid-template-columns: 1fr; gap: 8px; }
+.day { border-radius: 12px; padding: 13px 16px; box-shadow: 0 1px 2px rgba(0,0,0,.03); }
+.day strong { font-size: 16px; }
+.day.today {
+  background: color-mix(in srgb, var(--accent) 12%, var(--surface));
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+}
+.pill { padding: 4px 11px; letter-spacing: .02em; }
+.pill.ghost { color: var(--muted); }
+
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  padding: 4px;
+  border-radius: 14px;
+  background: var(--line);
+  margin-bottom: 14px;
+}
+.tabs button {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 600;
+  border-radius: 10px;
+  min-height: 42px;
+}
+.tabs button[aria-pressed="true"] {
+  background: var(--surface);
+  color: var(--fg);
+  box-shadow: 0 1px 3px rgba(0,0,0,.12);
+}
+
+.passhead { align-items: center; }
+.passhead strong { font-size: 24px; }
+.passhead .lede { font-size: 14px; }
+.start {
+  min-height: 52px;
+  border-radius: 14px;
+  font-size: 16px;
+  letter-spacing: .01em;
+  box-shadow: 0 8px 18px -10px var(--accent);
+}
+
+.ex {
+  grid-template-columns: 34px minmax(0, 1fr);
+  padding: 18px 0;
+  gap: 14px;
+}
+.ex .n {
+  width: 34px;
+  height: 34px;
+  border-radius: 99px;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--accent) 14%, var(--surface));
+  color: var(--fg);
+  font-size: 13px;
+  font-weight: 700;
+}
+.ex h3 { font-size: 19px; font-weight: 800; font-stretch: 94%; margin-bottom: 8px; }
+.ex ol { padding-left: 20px; font-size: 15px; }
+.ex ol li { margin-bottom: 4px; }
+.ex ol li::marker { color: var(--accent); font-weight: 700; }
+.ex .alt {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: var(--bg);
+  font-size: 13px;
+}
+
+.fig {
+  max-width: 240px;
+  margin: 4px 0 10px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--accent) 6%, var(--bg));
+  border-color: transparent;
+}
+
+#timer {
+  padding: 22px;
+  transition: background-color .4s ease;
+}
+#timer:has(#tPhase:not(.rest):not(.skift)) {
+  background: color-mix(in srgb, var(--work) 13%, var(--surface));
+}
+#timer:has(#tPhase.rest) {
+  background: color-mix(in srgb, var(--rest) 13%, var(--surface));
+}
+#timer .row { font-size: 13px; }
+#tPhase { font-size: 12px; margin-top: 0; }
+.exname { font-size: clamp(26px, 7vw, 34px); margin-top: 6px; }
+.big { font-size: clamp(84px, 30vw, 140px); margin: 6px 0 10px; }
+.bar { height: 10px; background: color-mix(in srgb, var(--fg) 10%, transparent); }
+.controls button { border-radius: 14px; min-height: 50px; }
+
+ul.plain li { margin-bottom: 8px; }
+ul.plain li::marker { color: var(--accent); }
+.note {
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px dashed var(--line);
+  background: var(--surface);
+  color: var(--muted);
+}
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">6 uger · 3 programmer · 30 sek arbejde / 30 sek pause · 5 runder</p>
+    <h1>Fuldkropsprogram 6 uger</h1>
+    <p class="lede">Seks træningspas om ugen med tre forskellige programmer. Hver øvelse laves i 5 runder.</p>
+  </header>
+
+  <section id="timer" class="card" hidden aria-live="polite">
+    <div class="row"><span id="tPas"></span><span id="tEx"></span></div>
+    <div class="phase" id="tPhase"></div>
+    <div class="exname" id="tName"></div>
+    <div class="big" id="tSec">30</div>
+    <div class="bar"><i id="tBar"></i></div>
+    <div class="row" style="margin-top:10px"><span id="tRound"></span><span id="tNext"></span></div>
+    <div class="controls">
+      <button id="btnPause" class="primary" type="button">Pause</button>
+      <button id="btnSkip" type="button">Spring over</button>
+      <button id="btnStop" type="button">Stop</button>
+    </div>
+  </section>
+
+  <h2>Ugeplan</h2>
+  <div class="days" id="days"></div>
+
+  <h2>Programmer</h2>
+  <div class="tabs" id="passTabs" role="group" aria-label="Vælg program"></div>
+  <div class="card" id="passView"></div>
+
+  <h2>Før og efter</h2>
+  <div class="card">
+    <ul class="plain">
+      <li><strong>Opvarmning (5 min):</strong> let jog på stedet, armcirkler, hofte- og skulderrotationer og 10 luftsquats.</li>
+      <li><strong>Nedkøling (5 min):</strong> let gang og stræk af lår, lægge, hofter, bryst og skuldre, 30 sek pr. side.</li>
+      <li><strong>Pause mellem øvelser:</strong> 60 sek for at gøre klar til næste station.</li>
+    </ul>
+  </div>
+
+  <h2>Progression</h2>
+  <div class="card">
+    <ul class="plain">
+      <li><strong>Uge 1–2:</strong> let belastning og lavere tempo. Fokus på teknik.</li>
+      <li><strong>Uge 3–4:</strong> tungere håndvægte, lavere knæ-variant eller hurtigere tempo.</li>
+      <li><strong>Uge 5–6:</strong> ekstra runde (6 i stedet for 5) på udvalgte øvelser, eller pausen forkortes til 20 sek.</li>
+    </ul>
+  </div>
+
+  <p class="note">Har du smerter i led eller ryg, så skift til en lettere variant. Har du skader, medicinske tilstande eller ikke trænet før, så tal med en læge eller fysioterapeut inden start.</p>
+</div>
+
+<script>
+const WORK = 30, REST = 30, TRANS = 60, ROUNDS = 5;
+
+/* Hver øvelse har to stillinger: p (start) og q (slut). Hoved (h) og linjer (l) har samme form i begge,
+   så bevægelsen kan animeres mellem dem. Gulv ved y=112 i en 160x120 boks. */
+const PASSES = {
+  1: {
+    title: "Pas 1", focus: "Ben, bryst og core",
+    items: [
+      { n: "Kropsvægtsquat", steps: ["Stil fødderne lidt over skulderbredde, tæerne let udad.", "Sæt hoften bagud og ned, som om du skal sidde på en stol.", "Hold hælene i gulvet og stræk dig op igen gennem hælene."], alt: "Goblet squat med en håndvægt holdt foran brystet",
+        p: { h: [70, 30], l: [[[70,38],[70,66]], [[70,44],[92,52]], [[70,66],[90,80],[82,112]], [[66,66],[84,82],[76,112]]] },
+        q: { h: [70, 22], l: [[[70,30],[70,62]], [[70,38],[62,54]], [[70,62],[74,88],[72,112]], [[70,62],[66,88],[66,112]]] } },
+      { n: "Push-ups", steps: ["Hænderne lidt bredere end skuldrene, krop i én lige linje fra hoved til hæl.", "Sænk brystet mod gulvet med albuerne ca. 45° fra kroppen.", "Pres dig op igen uden at hoften synker."], alt: "Push-ups på knæ, med kroppen i en lige linje fra knæ til hoved",
+        p: { h: [30, 66], l: [[[40,70],[130,78]], [[50,72],[50,110]], [[130,78],[144,110]]] },
+        q: { h: [30, 74], l: [[[40,80],[130,84]], [[50,84],[50,110]], [[130,84],[144,110]]] } },
+      { n: "Udfald skiftevis", steps: ["Tag et stort skridt frem og sænk dig, til bagerste knæ næsten rører gulvet.", "Forreste knæ står over ankel, og overkroppen er oprejst.", "Skub dig op og skift ben til næste runde."], alt: "Udfald med én hånd på en stol for balance",
+        p: { h: [80, 22], l: [[[80,30],[80,60]], [[80,36],[66,52]], [[80,36],[96,52]], [[80,60],[62,80],[62,112]], [[80,60],[104,98],[120,112]]] },
+        q: { h: [80, 22], l: [[[80,30],[80,62]], [[80,36],[70,52]], [[80,36],[90,52]], [[80,62],[72,88],[70,112]], [[80,62],[90,88],[92,112]]] } },
+      { n: "Hip thrusts på gulvet", steps: ["Sid med ryggen mod en sofa eller seng og knæene bøjet, fødderne i gulvet.", "Løft hoften op, til kroppen danner en linje fra knæ til skulder.", "Pres i balderne i toppen, og sænk langsomt igen."], alt: "Hold toppen i to sekunder hver runde",
+        p: { h: [34, 90], l: [[[46,100],[92,62]], [[92,62],[120,62],[122,110]]] },
+        q: { h: [34, 94], l: [[[46,100],[92,100]], [[92,100],[118,72],[122,110]]] } },
+      { n: "Plank", steps: ["Stå på underarmene med albuerne under skuldrene.", "Spænd mave og balder, så hoften ikke synker eller stikker op.", "Hold stillingen og træk vejret roligt."], alt: "Plank på knæene",
+        p: { h: [30, 70], l: [[[44,76],[136,84]], [[54,80],[62,110]], [[136,84],[146,110]]] },
+        q: { h: [30, 58], l: [[[44,66],[136,72]], [[54,68],[54,110]], [[136,72],[146,110]]] } },
+      { n: "Superman", steps: ["Læg dig på maven med armene strakt frem og benene lige bag dig.", "Løft arme, bryst og ben let fra gulvet samtidig.", "Hold kort i toppen, og slap langsomt af igen."], alt: "Løft kun arme eller kun ben ad gangen",
+        p: { h: [30, 78], l: [[[40,84],[120,84]], [[44,84],[16,70]], [[120,84],[150,68]]] },
+        q: { h: [30, 92], l: [[[40,98],[120,98]], [[44,98],[18,104]], [[120,98],[150,104]]] } }
+    ]
+  },
+  2: {
+    title: "Pas 2", focus: "Bagkæde, skuldre og arme",
+    items: [
+      { n: "Rumænsk markløft", steps: ["Stå med vægterne foran lårene, knæene let bøjet.", "Skub hofterne bagud og lad vægterne glide tæt langs benene, ryggen lige.", "Stræk hoften frem igen, og spænd balderne i toppen."], alt: "Vandflasker eller en tung bog som vægt",
+        p: { h: [80, 24], l: [[[72,32],[98,64]], [[72,36],[84,72]], [[98,64],[102,88],[98,112]], [[98,64],[92,88],[96,112]]] },
+        q: { h: [78, 24], l: [[[78,32],[78,64]], [[78,36],[84,72]], [[78,64],[80,88],[78,112]], [[78,64],[76,88],[74,112]]] } },
+      { n: "Skulderpres", steps: ["Stå oprejst med vægterne i skulderhøjde og håndfladerne fremad.", "Pres vægterne lige op over hovedet, uden at svaje i ryggen.", "Sænk dem kontrolleret tilbage til skulderhøjde."], alt: "Modstandsbånd under fødderne, hænderne på båndet",
+        p: { h: [80, 24], l: [[[80,34],[80,70]], [[80,40],[60,22]], [[80,40],[100,22]], [[80,70],[70,112]], [[80,70],[90,112]]] },
+        q: { h: [80, 24], l: [[[80,34],[80,70]], [[80,40],[64,54]], [[80,40],[96,54]], [[80,70],[70,112]], [[80,70],[90,112]]] } },
+      { n: "Roning", steps: ["Stå med let bøjede knæ og hæld overkroppen frem fra hoften, ryggen lige.", "Træk vægterne ind mod siden af maven, og før albuerne tæt langs kroppen.", "Stræk armene ud igen, uden at runde ryggen."], alt: "Modstandsbånd fastgjort ved hoftehøjde",
+        p: { h: [110, 42], l: [[[60,70],[100,50]], [[100,50],[84,78]], [[60,70],[58,112]], [[60,70],[72,112]]] },
+        q: { h: [110, 42], l: [[[60,70],[100,50]], [[100,50],[96,74]], [[60,70],[58,112]], [[60,70],[72,112]]] } },
+      { n: "Step-ups", steps: ["Stå foran en bænk eller et trappetrin med hele foden på.", "Træd op med det ene ben, og træk det andet op ved siden af.", "Gå ned igen kontrolleret, og skift ben til næste runde."], alt: "Lavere trin, eller træd op uden at løfte bagbenet helt",
+        p: { h: [96, 22], l: [[[100,32],[100,60]], [[100,40],[88,56]], [[100,60],[114,70],[118,86]], [[100,60],[88,84],[88,112]], [[118,86],[142,86],[142,112]]] },
+        q: { h: [118, 22], l: [[[118,30],[118,58]], [[118,38],[106,54]], [[118,58],[120,72],[120,86]], [[118,58],[108,80],[106,112]], [[118,86],[142,86],[142,112]]] } },
+      { n: "Dead bug", steps: ["Læg dig på ryggen med armene pegende mod loftet og knæene over hofterne.", "Stræk modsatte arm og ben langsomt ud mod gulvet, mens ryggen presses ned.", "Vend tilbage til udgangsstillingen og skift side."], alt: "Kun arme eller kun ben ad gangen",
+        p: { h: [26, 100], l: [[[40,104],[80,104]], [[48,102],[42,72]], [[80,104],[98,84],[106,70]], [[80,104],[122,100]]] },
+        q: { h: [26, 100], l: [[[40,104],[80,104]], [[48,102],[70,108]], [[80,104],[98,96],[112,108]], [[80,104],[104,70]]] } },
+      { n: "Bicepscurl", steps: ["Stå oprejst med vægterne ved siden af kroppen, håndfladerne fremad.", "Bøj albuerne og løft vægterne op mod skuldrene, albuerne tæt på siden.", "Sænk langsomt til strakte arme."], alt: "Lettere vægt eller vandflasker",
+        p: { h: [80, 22], l: [[[80,32],[80,70]], [[80,38],[68,58],[68,44]], [[80,38],[92,58],[92,44]], [[80,70],[70,112]], [[80,70],[90,112]]] },
+        q: { h: [80, 22], l: [[[80,32],[80,70]], [[80,38],[70,58],[70,70]], [[80,38],[90,58],[90,70]], [[80,70],[70,112]], [[80,70],[90,112]]] } }
+    ]
+  },
+  3: {
+    title: "Pas 3", focus: "Puls, balance og mave",
+    items: [
+      { n: "Squat jumps", steps: ["Stå med fødderne skulderbredde fra hinanden, og sænk dig i en squat.", "Hop kraftigt op og land blødt med knæene let bøjet.", "Gå direkte ned i næste squat."], alt: "Squat uden hop, ét stykke ad gangen",
+        p: { h: [80, 14], l: [[[80,24],[80,52]], [[80,30],[66,18]], [[80,30],[94,18]], [[80,52],[68,70],[72,92]], [[80,52],[92,70],[88,92]]] },
+        q: { h: [80, 50], l: [[[80,58],[80,84]], [[80,64],[66,74]], [[80,64],[94,74]], [[80,84],[68,100],[72,112]], [[80,84],[92,100],[88,112]]] } },
+      { n: "Modificerede burpees", steps: ["Stå oprejst og sænk dig ned i en squat med hænderne på gulvet.", "Skub benene bagud, så du står i plankestilling, og træk benene tilbage igen.", "Rejs dig op. Det er ét omdrejning."], alt: "Uden hop og uden armstrækning til sidst",
+        p: { h: [36, 74], l: [[[46,82],[124,104]], [[46,82],[40,110]], [[124,104],[130,112]]] },
+        q: { h: [80, 26], l: [[[80,36],[80,74]], [[80,44],[92,60]], [[80,74],[88,112]]] } },
+      { n: "Sideplank", steps: ["Lig på siden og støt dig på underarmen, albuen under skulderen.", "Løft hoften, så kroppen danner en lige linje fra hoved til fødder.", "Hold, og skift side til næste runde."], alt: "Sideplank på knæet",
+        p: { h: [30, 66], l: [[[50,86],[138,104]], [[50,86],[50,112]], [[138,104],[146,112]]] },
+        q: { h: [30, 66], l: [[[50,86],[136,100]], [[50,86],[50,112]], [[136,100],[146,112]]] } },
+      { n: "Mountain climbers", steps: ["Stå i plankestilling med hænderne under skuldrene og armene strakte.", "Træk det ene knæ ind mod brystet, og skift hurtigt til det andet.", "Hold hoften nede og fortsæt i et jævnt tempo."], alt: "Langsommere tempo, med ét ben ad gangen",
+        p: { h: [30, 62], l: [[[40,70],[130,76]], [[46,72],[46,110]], [[130,76],[92,70],[82,96]], [[130,76],[146,112]]] },
+        q: { h: [30, 62], l: [[[40,70],[130,76]], [[46,72],[46,110]], [[130,76],[98,84],[84,100]], [[130,76],[146,112]]] } },
+      { n: "Glute bridge", steps: ["Lig på ryggen med knæene bøjet og fødderne flade i gulvet.", "Løft hoften op, til kroppen danner en linje fra knæ til skulder.", "Hold toppen et sekund med strammede balder, og sænk langsomt."], alt: "Med ét ben strakt ud, og løft hoften med det bøjede ben",
+        p: { h: [26, 96], l: [[[36,100],[80,60]], [[80,60],[108,62],[112,104]]] },
+        q: { h: [26, 96], l: [[[36,100],[80,100]], [[80,100],[108,66],[112,104]]] } },
+      { n: "Tricep dips", steps: ["Sid på kanten af en stol med hænderne ved hoften, og skub hoften lidt frem.", "Bøj albuerne og sænk kroppen, til albuerne er ca. 90°, med ryggen tæt på stolen.", "Pres dig op igen med armene, og hold albuerne rettet bagud."], alt: "Med knæene bøjet og fødderne i gulvet",
+        p: { h: [86, 30], l: [[[90,40],[84,72]], [[90,44],[110,62],[118,68]], [[84,72],[112,76],[112,112]], [[116,68],[116,112]], [[146,68],[146,112]], [[116,68],[146,68]]] },
+        q: { h: [88, 38], l: [[[92,48],[86,76]], [[92,48],[96,70],[118,68]], [[86,76],[112,76],[112,112]], [[116,68],[116,112]], [[146,68],[146,112]], [[116,68],[146,68]]] } }
+    ]
+  }
+};
+
+const SCHEDULE = [
+  ["Mandag", 1], ["Tirsdag", 2], ["Onsdag", 3],
+  ["Torsdag", 1], ["Fredag", 2], ["Lørdag", 3],
+  ["Søndag", 0]
+];
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+const reduceMotion = () => window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function figSvg(p, q, name) {
+  const animate = !reduceMotion();
+  const pts = (arr) => arr.map(x => x.join(",")).join(" ");
+  const spline = `<animate calcMode="spline" keyTimes="0;0.5;1" keySplines=".45 0 .55 1;.45 0 .55 1" dur="2.6s" repeatCount="indefinite"`;
+  const lines = p.l.map((seg, i) => {
+    const a = pts(seg), b = pts(q.l[i]);
+    const anim = animate ? `${spline} attributeName="points" values="${a};${b};${a}"/>` : "";
+    return `<polyline points="${a}">${anim}</polyline>`;
+  }).join("");
+  const headAnim = animate
+    ? `${spline} attributeName="cx" values="${p.h[0]};${q.h[0]};${p.h[0]}"/>${spline} attributeName="cy" values="${p.h[1]};${q.h[1]};${p.h[1]}"/>`
+    : "";
+  return `<svg class="fig" viewBox="0 0 160 120" role="img" aria-label="Illustration af ${esc(name)}"><line class="floor" x1="8" y1="112" x2="152" y2="112"/>${lines}<circle cx="${p.h[0]}" cy="${p.h[1]}" r="7">${headAnim}</circle></svg>`;
+}
+
+function renderDays() {
+  const jsDay = new Date().getDay();
+  const todayIdx = (jsDay + 6) % 7;
+  $("days").innerHTML = SCHEDULE.map(([day, pas], i) => {
+    const isToday = i === todayIdx;
+    const pill = pas
+      ? `<span class="pill">Pas ${pas}</span>`
+      : `<span class="pill ghost">Hviledag</span>`;
+    const today = isToday ? ` <span class="pill">I dag</span>` : "";
+    return `<div class="day ${isToday ? "today" : ""}"><strong>${day}</strong><span>${pill}${today}</span></div>`;
+  }).join("");
+}
+
+let currentPass = 1;
+
+function renderPassTabs() {
+  $("passTabs").innerHTML = [1, 2, 3].map(n =>
+    `<button type="button" data-pass="${n}" aria-pressed="${n === currentPass}">Pas ${n}</button>`
+  ).join("");
+}
+
+function renderPass() {
+  const p = PASSES[currentPass];
+  $("passView").innerHTML = `
+    <div class="passhead"><strong>${esc(p.title)}</strong><span class="lede">${esc(p.focus)} · ca. 35 min</span></div>
+    <button type="button" class="primary start" data-start="${currentPass}">Start ${esc(p.title)}</button>
+    ${p.items.map((it, i) => `
+      <div class="ex">
+        <span class="n">${i + 1}</span>
+        <div>
+          <h3>${esc(it.n)}</h3>
+          ${figSvg(it.p, it.q, it.n)}
+          <ol>${it.steps.map(s => `<li>${esc(s)}</li>`).join("")}</ol>
+          <div class="alt"><b>Lettere:</b> ${esc(it.alt)}</div>
+        </div>
+      </div>`).join("")}
+  `;
+}
+
+$("passTabs").addEventListener("click", (e) => {
+  const b = e.target.closest("button[data-pass]");
+  if (!b) return;
+  currentPass = Number(b.dataset.pass);
+  renderPassTabs();
+  renderPass();
+});
+
+$("passView").addEventListener("click", (e) => {
+  const b = e.target.closest("button[data-start]");
+  if (!b) return;
+  startSession(Number(b.dataset.start));
+});
+
+const st = { pas: 0, steps: [], idx: 0, endAt: 0, remainingMs: 0, running: false, timer: null, ctx: null, lock: null };
+
+function buildSteps(n) {
+  const items = PASSES[n].items;
+  const steps = [];
+  items.forEach((_, i) => {
+    for (let r = 1; r <= ROUNDS; r++) {
+      steps.push({ type: "work", i, r, dur: WORK });
+      if (r < ROUNDS) steps.push({ type: "rest", i, r, dur: REST });
+    }
+    if (i < items.length - 1) steps.push({ type: "skift", i: i + 1, r: 0, dur: TRANS });
+  });
+  return steps;
+}
+
+function beep(freq) {
+  try {
+    st.ctx = st.ctx || new (window.AudioContext || window.webkitAudioContext)();
+    const o = st.ctx.createOscillator();
+    const g = st.ctx.createGain();
+    o.frequency.value = freq;
+    g.gain.value = 0.12;
+    o.connect(g);
+    g.connect(st.ctx.destination);
+    o.start();
+    o.stop(st.ctx.currentTime + 0.2);
+  } catch (e) { /* lyd er valgfri */ }
+}
+
+async function keepAwake() {
+  try { st.lock = await navigator.wakeLock.request("screen"); } catch (e) { /* valgfri */ }
+}
+function releaseAwake() {
+  try { if (st.lock) st.lock.release(); } catch (e) {}
+  st.lock = null;
+}
+
+function startSession(n) {
+  stopSession(true);
+  st.pas = n;
+  st.steps = buildSteps(n);
+  st.idx = 0;
+  $("timer").hidden = false;
+  keepAwake();
+  enterStep();
+  st.timer = setInterval(tick, 200);
+  $("timer").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function enterStep() {
+  const s = st.steps[st.idx];
+  st.endAt = Date.now() + s.dur * 1000;
+  st.running = true;
+  st.remainingMs = s.dur * 1000;
+  beep(s.type === "work" ? 880 : s.type === "rest" ? 520 : 660);
+  $("btnPause").textContent = "Pause";
+  render();
+}
+
+function tick() {
+  if (!st.running) return;
+  if (Date.now() >= st.endAt) {
+    st.idx++;
+    if (st.idx >= st.steps.length) return finish();
+    enterStep();
+  } else {
+    render();
+  }
+}
+
+function render() {
+  const items = PASSES[st.pas].items;
+  const s = st.steps[st.idx];
+  const it = items[s.i];
+  const rem = st.running ? Math.max(0, st.endAt - Date.now()) : st.remainingMs;
+  const frac = Math.min(1, Math.max(0, 1 - rem / (s.dur * 1000)));
+
+  $("tPas").textContent = PASSES[st.pas].title;
+  $("tEx").textContent = `Øvelse ${s.i + 1} af ${items.length}`;
+
+  const labels = { work: "Arbejde", rest: "Pause", skift: "Skift" };
+  $("tPhase").textContent = labels[s.type];
+  $("tPhase").className = "phase " + (s.type === "work" ? "" : s.type);
+
+  $("tName").textContent = s.type === "skift" ? `Næste: ${it.n}` : it.n;
+  $("tRound").textContent = s.type === "skift" ? "" : `Runde ${s.r} af ${ROUNDS}`;
+
+  let nextText = "";
+  if (s.type === "work") nextText = (s.r < ROUNDS) ? "Derefter: pause" : (s.i < items.length - 1 ? "Derefter: skift" : "Sidste runde");
+  if (s.type === "rest") nextText = `Derefter: runde ${s.r + 1}`;
+  $("tNext").textContent = nextText;
+
+  $("tSec").textContent = Math.ceil(rem / 1000);
+  $("tBar").className = s.type === "work" ? "" : s.type;
+  $("tBar").style.width = (frac * 100).toFixed(1) + "%";
+}
+
+function togglePause() {
+  if (!st.steps.length || st.idx >= st.steps.length) return;
+  if (st.running) {
+    st.remainingMs = Math.max(0, st.endAt - Date.now());
+    st.running = false;
+    $("btnPause").textContent = "Fortsæt";
+  } else {
+    st.endAt = Date.now() + st.remainingMs;
+    st.running = true;
+    $("btnPause").textContent = "Pause";
+  }
+  render();
+}
+
+function skip() {
+  if (st.idx >= st.steps.length) return;
+  st.idx++;
+  if (st.idx >= st.steps.length) return finish();
+  enterStep();
+}
+
+function finish() {
+  clearInterval(st.timer);
+  st.timer = null;
+  st.running = false;
+  st.idx = st.steps.length;
+  releaseAwake();
+  beep(1040);
+  $("tPhase").textContent = "Færdig";
+  $("tPhase").className = "phase skift";
+  $("tName").textContent = "Pas gennemført. Godt gået!";
+  $("tEx").textContent = "";
+  $("tRound").textContent = "";
+  $("tNext").textContent = "";
+  $("tSec").textContent = "0";
+  $("tBar").className = "";
+  $("tBar").style.width = "100%";
+  $("btnPause").textContent = "Pause";
+}
+
+function stopSession(silent) {
+  clearInterval(st.timer);
+  st.timer = null;
+  st.running = false;
+  releaseAwake();
+  if (!silent) $("timer").hidden = true;
+}
+
+$("btnPause").addEventListener("click", togglePause);
+$("btnSkip").addEventListener("click", skip);
+$("btnStop").addEventListener("click", () => stopSession(false));
+
+renderDays();
+renderPassTabs();
+renderPass();
+</script>
+
+</body></html>
