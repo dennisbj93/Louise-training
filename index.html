@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#f3f4ef">
+<meta name="theme-color" content="#fbf5f3">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Træning">
@@ -12,47 +13,51 @@
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=JetBrains+Mono:wght@500..700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Jost:wght@400;500;600;700&display=swap">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
 <style>
 :root {
-  --bg: #f3f4ef;
+  --bg: #fbf5f3;
   --surface: #ffffff;
-  --fg: #161d19;
-  --muted: #5b685f;
-  --line: #d8ddd3;
-  --accent: #1d6a4d;
+  --fg: #33222b;
+  --muted: #7e6872;
+  --line: #efdfe2;
+  --accent: #b0466a;
   --accent-fg: #ffffff;
-  --work: #1d6a4d;
-  --rest: #b5581d;
+  --work: #b0466a;
+  --rest: #b5803a;
+  --blush: #f7e4e8;
+  --serif: "Cormorant Garamond", "Times New Roman", serif;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0e1411;
-    --surface: #161f1a;
-    --fg: #ecf1ea;
-    --muted: #98a69c;
-    --line: #2a362f;
-    --accent: #5cc195;
-    --accent-fg: #0e1411;
-    --work: #5cc195;
-    --rest: #e89a58;
+    --bg: #1b1317;
+    --surface: #251a20;
+    --fg: #f7ebef;
+    --muted: #bba4ad;
+    --line: #3b2a32;
+    --accent: #e597b0;
+    --accent-fg: #1b1317;
+    --work: #e597b0;
+    --rest: #e4b873;
+    --blush: #3a2430;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0e1411;
-  --surface: #161f1a;
-  --fg: #ecf1ea;
-  --muted: #98a69c;
-  --line: #2a362f;
-  --accent: #5cc195;
-  --accent-fg: #0e1411;
-  --work: #5cc195;
-  --rest: #e89a58;
+  --bg: #1b1317;
+    --surface: #251a20;
+    --fg: #f7ebef;
+    --muted: #bba4ad;
+    --line: #3b2a32;
+    --accent: #e597b0;
+    --accent-fg: #1b1317;
+    --work: #e597b0;
+    --rest: #e4b873;
+    --blush: #3a2430;
   color-scheme: dark;
 }
 
@@ -60,7 +65,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--fg);
-  font-family: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-family: "Jost", system-ui, -apple-system, "Segoe UI", sans-serif;
   font-size: 16px;
   line-height: 1.5;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
@@ -152,7 +157,7 @@ button[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-co
   border-top: 1px solid var(--line);
 }
 .ex:first-of-type { border-top: 0; padding-top: 4px; }
-.ex .n { font-family: "JetBrains Mono", ui-monospace, monospace; color: var(--muted); font-variant-numeric: tabular-nums; }
+.ex .n { font-family: "Jost", system-ui, sans-serif; color: var(--muted); font-variant-numeric: tabular-nums; }
 .ex h3 { margin: 0 0 4px; font-size: 17px; font-weight: 700; text-wrap: balance; }
 .ex ol { margin: 0 0 6px; padding-left: 18px; font-size: 15px; }
 .ex ol li { margin-bottom: 2px; }
@@ -180,7 +185,7 @@ button[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-co
 .phase.skift { color: var(--muted); }
 .exname { margin-top: 4px; font-size: clamp(22px, 6vw, 28px); font-weight: 800; font-stretch: 92%; line-height: 1.15; text-wrap: balance; }
 .big {
-  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-family: "Jost", system-ui, sans-serif;
   font-weight: 700;
   font-size: clamp(72px, 26vw, 120px);
   line-height: 1.05;
@@ -366,7 +371,7 @@ ul.plain li::marker { color: var(--accent); }
 .day.isdone { opacity: .85; }
 .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-bottom: 14px; }
 .stat { padding: 10px 12px; border-radius: 12px; background: var(--bg); min-width: 0; }
-.stat b { display: block; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 24px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.stat b { display: block; font-family: "Jost", system-ui, sans-serif; font-size: 24px; line-height: 1.1; font-variant-numeric: tabular-nums; }
 .stat span { font-size: 12px; color: var(--muted); }
 .weeks { display: grid; gap: 6px; }
 .wk { display: grid; grid-template-columns: 54px repeat(6, minmax(0, 1fr)); gap: 4px; align-items: center; font-size: 13px; color: var(--muted); }
@@ -381,6 +386,100 @@ ul.plain li::marker { color: var(--accent); }
 .small { margin: 0; font-size: 13px; color: var(--muted); }
 .small:empty { display: none; }
 button.linkish { justify-self: start; border: 0; background: none; padding: 0; min-height: 0; color: var(--muted); text-decoration: underline; font-size: 14px; }
+
+/* ---------- Elegant stil til Louise ---------- */
+body {
+  background:
+    radial-gradient(900px 420px at 110% -10%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 60%),
+    radial-gradient(700px 360px at -20% 30%, color-mix(in srgb, var(--rest) 9%, transparent), transparent 60%),
+    var(--bg);
+  background-attachment: fixed;
+}
+h1, .todaycard h2.t, .passhead strong, .ex h3, .exname, .install h3 {
+  font-family: var(--serif);
+  font-stretch: normal;
+  letter-spacing: 0;
+}
+h1 { font-weight: 600; font-size: clamp(42px, 12vw, 60px); line-height: 1; }
+h1 em { font-style: italic; color: var(--accent); font-weight: 600; }
+.lede { font-weight: 400; }
+.eyebrow { border-color: color-mix(in srgb, var(--accent) 30%, var(--line)); color: var(--accent); font-weight: 600; letter-spacing: .06em; }
+h2 { font-weight: 600; letter-spacing: .16em; color: var(--accent); }
+h2::after { background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 35%, transparent), transparent); }
+.card { border-radius: 22px; border-color: var(--line); box-shadow: 0 1px 2px rgba(80,30,50,.04), 0 18px 36px -24px rgba(120,40,70,.35); }
+.todaycard h2.t { font-size: clamp(32px, 9vw, 40px); font-weight: 600; line-height: 1.05; }
+.todaycard .kicker, .phase { letter-spacing: .16em; }
+.todaycard.isdone { background: linear-gradient(160deg, var(--blush), var(--surface)); }
+.passhead strong { font-size: 30px; font-weight: 600; }
+.ex h3 { font-size: 24px; font-weight: 600; }
+.exname { font-size: clamp(32px, 9vw, 42px); font-weight: 600; }
+.ex .n { background: var(--blush); color: var(--accent); }
+button, .tabs button { border-radius: 999px; }
+button.primary, .start { background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, var(--rest))); border: 0; letter-spacing: .03em; }
+.controls button { border-radius: 999px; }
+.tabs { border-radius: 999px; background: var(--blush); }
+.tabs button[aria-pressed="true"] { color: var(--accent); }
+.day { border-radius: 16px; }
+.day.today { background: var(--blush); border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); }
+.pill { background: color-mix(in srgb, var(--accent) 88%, var(--rest)); }
+.fig { background: var(--blush); }
+.stat { background: var(--blush); border-radius: 16px; }
+.stat b { font-family: var(--serif); font-size: 34px; font-weight: 600; color: var(--accent); }
+.banner { border-radius: 16px; background: color-mix(in srgb, var(--rest) 12%, var(--surface)); }
+.field input { border-radius: 12px; background: var(--blush); border-color: transparent; }
+.big { font-family: var(--serif); font-weight: 600; }
+.note { border-radius: 16px; }
+
+/* Kalender over gennemførte dage */
+.cal { display: grid; gap: 6px; }
+.calhead, .calrow { display: grid; grid-template-columns: 44px repeat(7, minmax(0, 1fr)); gap: 4px; align-items: center; }
+.calhead span { font-size: 11px; text-align: center; color: var(--muted); letter-spacing: .06em; }
+.calrow > span:first-child { font-size: 12px; color: var(--muted); }
+.calrow.cur > span:first-child { color: var(--accent); font-weight: 700; }
+.cd { aspect-ratio: 1; display: grid; place-items: center; border-radius: 999px; font-size: 13px; font-variant-numeric: tabular-nums; color: var(--muted); border: 1px solid transparent; }
+.cd.train { border-color: var(--line); color: var(--fg); }
+.cd.on { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); font-weight: 700; }
+.cd.missed { border: 1.5px dashed color-mix(in srgb, var(--rest) 70%, transparent); }
+.cd.rest { opacity: .5; }
+.cd.today { box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px color-mix(in srgb, var(--accent) 50%, transparent); }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 10px; font-size: 12px; color: var(--muted); }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 99px; margin-right: 5px; vertical-align: -1px; }
+details.history { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 12px; }
+details.history summary { cursor: pointer; font-weight: 600; color: var(--accent); }
+.histlist { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 6px; }
+.histlist li { display: flex; justify-content: space-between; gap: 10px; padding: 8px 12px; border-radius: 12px; background: var(--blush); font-size: 14px; }
+.histlist li span { color: var(--muted); }
+
+/* Hent som app */
+.install { position: relative; margin-top: 18px; background: linear-gradient(160deg, var(--blush), var(--surface)); }
+.install h3 { margin: 0 0 6px; font-size: 26px; font-weight: 600; }
+.install ol { margin: 8px 0 0; padding-left: 20px; }
+.install li { margin-bottom: 6px; }
+.install .x { position: absolute; top: 10px; right: 10px; min-height: 36px; width: 36px; padding: 0; border: 0; background: none; color: var(--muted); font-size: 20px; }
+.shareicon { display: inline-block; width: 16px; height: 18px; vertical-align: -3px; }
+.shareicon * { fill: none; stroke: var(--accent); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.btnrow { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+/* Print kun dagens program */
+#printArea { display: none; }
+@media print {
+  @page { margin: 14mm; }
+  body { background: #fff !important; color: #222; padding: 0; }
+  body > .wrap { display: none !important; }
+  #printArea { display: block; font-family: "Jost", sans-serif; }
+  #printArea h1 { font-family: var(--serif); font-size: 34px; margin: 0 0 2px; color: #222; }
+  #printArea .meta { color: #666; margin: 0 0 14px; }
+  #printArea .pex { display: grid; grid-template-columns: 130px 1fr; gap: 14px; padding: 10px 0; border-top: 1px solid #ddd; break-inside: avoid; }
+  #printArea h3 { font-family: var(--serif); font-size: 20px; margin: 0 0 4px; }
+  #printArea ol { margin: 0; padding-left: 18px; font-size: 13px; }
+  #printArea .palt { font-size: 12px; color: #555; margin-top: 4px; }
+  #printArea .rounds { margin-top: 6px; font-size: 13px; letter-spacing: .3em; }
+  #printArea .fig { max-width: 130px; background: #fff; border: 1px solid #ddd; }
+  #printArea .fig * { stroke: #222; }
+  #printArea .fig circle { fill: #222; }
+  #printArea .fig .floor { stroke: #ccc; }
+  #printArea .pfoot { margin-top: 12px; font-size: 12px; color: #555; }
+}
 </style>
 
 <div class="wrap">
@@ -393,6 +492,12 @@ button.linkish { justify-self: start; border: 0; background: none; padding: 0; m
   <div class="banner" id="reminder" hidden role="status"></div>
 
   <section class="card todaycard" id="today" aria-labelledby="todayTitle"></section>
+
+  <section class="card install" id="install" hidden>
+    <button type="button" class="x" id="installClose" aria-label="Luk">×</button>
+    <h3>Hent appen på din telefon</h3>
+    <div id="installBody"></div>
+  </section>
 
   <section id="timer" class="card" hidden aria-live="polite">
     <div class="row"><span id="tPas"></span><span id="tEx"></span></div>
@@ -414,7 +519,9 @@ button.linkish { justify-self: start; border: 0; background: none; padding: 0; m
   <h2>Dine fremskridt</h2>
   <div class="card">
     <div class="stats" id="stats"></div>
-    <div class="weeks" id="weeks" aria-label="Gennemførte pas pr. uge"></div>
+    <div class="cal" id="cal" aria-label="Kalender over de 6 uger"></div>
+    <div class="legend"><span><i style="background:var(--accent)"></i>Gennemført</span><span><i style="border:1.5px dashed var(--rest)"></i>Ikke nået</span><span><i style="border:1px solid var(--line)"></i>Kommende</span></div>
+    <details class="history" id="history"><summary></summary><ul class="histlist" id="histList"></ul></details>
   </div>
 
   <h2>Programmer</h2>
@@ -453,6 +560,8 @@ button.linkish { justify-self: start; border: 0; background: none; padding: 0; m
 
   <p class="note">Har du smerter i led eller ryg, så skift til en lettere variant. Har du skader, medicinske tilstande eller ikke trænet før, så tal med en læge eller fysioterapeut inden start.</p>
 </div>
+
+<div id="printArea" aria-hidden="true"></div>
 
 <script>
 const WORK = 30, REST = 30, TRANS = 60, ROUNDS = 5;
@@ -636,7 +745,7 @@ function renderHeader(now) {
     lede = "Her er dagens træning. Du klarer det!";
   }
   $("hEyebrow").textContent = eyebrow;
-  $("hHello").textContent = `${greeting(now)}, ${NAME}`;
+  $("hHello").innerHTML = `${greeting(now)}, <em>${esc(NAME)}</em>`;
   $("hLede").textContent = lede;
 }
 
@@ -665,10 +774,13 @@ function renderToday(now) {
     <ol class="exlist">${p.items.map(it => `<li>${esc(it.n)}</li>`).join("")}</ol>
     ${done
       ? `<div class="done"><span class="check">✓</span>Gennemført i dag. Godt gået, ${NAME}!</div>
-         <div class="actions"><button type="button" class="linkish" data-undo>Fortryd</button></div>`
+         <div class="actions"><button type="button" data-print="${pas}">Print programmet</button><button type="button" class="linkish" data-undo>Fortryd</button></div>`
       : `<div class="actions">
            <button type="button" class="primary start" data-start="${pas}">Start ${esc(p.title)}</button>
-           <button type="button" data-mark="${pas}">Jeg har trænet i dag</button>
+           <div class="btnrow">
+             <button type="button" data-mark="${pas}">Jeg har trænet</button>
+             <button type="button" data-print="${pas}">Print programmet</button>
+           </div>
          </div>`}
   `;
 }
@@ -722,27 +834,117 @@ function streak(now) {
   return n;
 }
 
+const MONTHS = ["januar", "februar", "marts", "april", "maj", "juni", "juli", "august", "september", "oktober", "november", "december"];
+const longDate = (d) => `${SCHEDULE[dayIdx(d)][0]} d. ${d.getDate()}. ${MONTHS[d.getMonth()]}`;
+
 function renderStats(now) {
-  const count = Object.keys(store.done).filter(k => k >= store.start).length;
+  const doneKeys = Object.keys(store.done).filter(k => k >= store.start).sort().reverse();
   const curWeek = Math.min(Math.max(weekOf(now), 1), WEEKS);
   $("stats").innerHTML = `
-    <div class="stat"><b>${count}</b><span>af ${TOTAL} pas</span></div>
+    <div class="stat"><b>${doneKeys.length}</b><span>af ${TOTAL} pas</span></div>
     <div class="stat"><b>${streak(now)}</b><span>i træk</span></div>
     <div class="stat"><b>${Math.max(0, Math.min(WEEKS, weekOf(now)))}</b><span>af ${WEEKS} uger</span></div>`;
+
   const start = parseYmd(store.start);
-  let rows = "";
+  const today = ymd(now);
+  let html = `<div class="calhead"><span></span>${SCHEDULE.map(([d]) => `<span>${d.slice(0, 1)}</span>`).join("")}</div>`;
   for (let w = 0; w < WEEKS; w++) {
-    let dots = "";
-    SCHEDULE.forEach(([, pas], i) => {
-      if (!pas) return;
+    let cells = "";
+    SCHEDULE.forEach(([day, pas], i) => {
       const d = addDays(start, w * 7 + i);
-      const cls = isDone(d) ? "on" : ymd(d) < ymd(now) ? "missed" : "";
-      dots += `<i class="dot ${cls}" title="${ymd(d)}"></i>`;
+      const key = ymd(d);
+      const done = isDone(d);
+      const cls = [
+        done ? "on" : pas ? (key < today ? "missed" : "train") : "rest",
+        key === today ? "today" : ""
+      ].join(" ");
+      const label = `${longDate(d)}: ${done ? "gennemført" : pas ? `Pas ${pas}` : "hviledag"}`;
+      cells += `<span class="cd ${cls}" title="${label}" aria-label="${label}">${d.getDate()}</span>`;
     });
-    rows += `<div class="wk ${w + 1 === curWeek && programDay(now) >= 0 ? "cur" : ""}"><span>Uge ${w + 1}</span>${dots}</div>`;
+    html += `<div class="calrow ${w + 1 === curWeek && programDay(now) >= 0 ? "cur" : ""}"><span>Uge ${w + 1}</span>${cells}</div>`;
   }
-  $("weeks").innerHTML = rows;
+  $("cal").innerHTML = html;
+
+  $("history").querySelector("summary").textContent = doneKeys.length
+    ? `Se alle gennemførte dage (${doneKeys.length})`
+    : "Ingen gennemførte dage endnu";
+  $("histList").innerHTML = doneKeys.map(k => {
+    const pas = store.done[k];
+    return `<li>${esc(longDate(parseYmd(k)))}<span>${PASSES[pas] ? esc(PASSES[pas].title) : ""} ✓</span></li>`;
+  }).join("");
 }
+
+/* ---------- Print ---------- */
+function printPass(n) {
+  const p = PASSES[n];
+  const now = new Date();
+  const when = passOn(now) === n ? `${longDate(now)} · ` : "";
+  $("printArea").innerHTML = `
+    <h1>${esc(p.title)}: ${esc(p.focus)}</h1>
+    <p class="meta">${esc(when)}${esc(NAME)}s træning · ${WORK} sek arbejde / ${REST} sek pause · ${ROUNDS} runder · ca. 35 min</p>
+    <p class="meta"><b>Opvarmning (5 min):</b> let jog på stedet, armcirkler, hofte- og skulderrotationer og 10 luftsquats.</p>
+    ${p.items.map((it, i) => `
+      <div class="pex">
+        ${figSvg(it.q, it.q, it.n)}
+        <div>
+          <h3>${i + 1}. ${esc(it.n)}</h3>
+          <ol>${it.steps.map(st => `<li>${esc(st)}</li>`).join("")}</ol>
+          <div class="palt"><b>Lettere:</b> ${esc(it.alt)}</div>
+          <div class="rounds">Runder: ${"☐ ".repeat(ROUNDS)}</div>
+        </div>
+      </div>`).join("")}
+    <p class="pfoot"><b>Nedkøling (5 min):</b> let gang og stræk af lår, lægge, hofter, bryst og skuldre, 30 sek pr. side.</p>`;
+  window.print();
+}
+
+/* ---------- Hent som app ---------- */
+let installPrompt = null;
+const isStandalone = () => window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const SHARE_ICON = `<svg class="shareicon" viewBox="0 0 16 18" aria-label="Del"><path d="M8 11V1M4.5 4.5 8 1l3.5 3.5"/><path d="M5 7H2.5v9.5h11V7H11"/></svg>`;
+
+function renderInstall() {
+  const box = $("install");
+  if (isStandalone() || store.installHidden) { box.hidden = true; return; }
+  if (isIOS()) {
+    const inSafari = !/crios|fxios|edgios/i.test(navigator.userAgent);
+    $("installBody").innerHTML = `
+      <p class="lede" style="margin:0">Så ligger træningen på hjemmeskærmen som en rigtig app, og påmindelser virker bedre.</p>
+      <ol>
+        ${inSafari ? "" : "<li>Åbn siden i <b>Safari</b>.</li>"}
+        <li>Tryk på <b>Del</b> ${SHARE_ICON} nederst på skærmen.</li>
+        <li>Rul ned og vælg <b>Føj til hjemmeskærm</b>.</li>
+        <li>Tryk <b>Tilføj</b>. Nu ligger "Træning" sammen med dine andre apps.</li>
+      </ol>`;
+    box.hidden = false;
+  } else if (installPrompt) {
+    $("installBody").innerHTML = `
+      <p class="lede" style="margin:0 0 10px">Læg træningen på hjemmeskærmen som en rigtig app.</p>
+      <button type="button" class="primary start" id="btnInstall">Installer appen</button>`;
+    box.hidden = false;
+  } else {
+    box.hidden = true;
+  }
+}
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  installPrompt = e;
+  renderInstall();
+});
+$("install").addEventListener("click", async (e) => {
+  if (e.target.closest("#installClose")) {
+    store.installHidden = true;
+    save();
+    return renderInstall();
+  }
+  if (e.target.closest("#btnInstall") && installPrompt) {
+    installPrompt.prompt();
+    await installPrompt.userChoice;
+    installPrompt = null;
+    renderInstall();
+  }
+});
 
 /* ---------- Påmindelser ---------- */
 let reminderTimer = null;
@@ -870,6 +1072,8 @@ $("today").addEventListener("click", (e) => {
   if (s) return startSession(Number(s.dataset.start));
   const m = e.target.closest("button[data-mark]");
   if (m) return markDone(new Date(), Number(m.dataset.mark));
+  const pr = e.target.closest("button[data-print]");
+  if (pr) return printPass(Number(pr.dataset.print));
   if (e.target.closest("button[data-undo]")) unmarkDone(new Date());
 });
 
@@ -901,6 +1105,7 @@ function renderPass() {
   $("passView").innerHTML = `
     <div class="passhead"><strong>${esc(p.title)}</strong><span class="lede">${esc(p.focus)} · ca. 35 min</span></div>
     <button type="button" class="primary start" data-start="${currentPass}">Start ${esc(p.title)}</button>
+    <button type="button" class="start" style="background:none;box-shadow:none;color:var(--accent);border:1px solid var(--line)" data-print="${currentPass}">Print ${esc(p.title)}</button>
     ${p.items.map((it, i) => `
       <div class="ex">
         <span class="n">${i + 1}</span>
@@ -923,6 +1128,8 @@ $("passTabs").addEventListener("click", (e) => {
 });
 
 $("passView").addEventListener("click", (e) => {
+  const pr = e.target.closest("button[data-print]");
+  if (pr) return printPass(Number(pr.dataset.print));
   const b = e.target.closest("button[data-start]");
   if (!b) return;
   startSession(Number(b.dataset.start));
@@ -1083,6 +1290,7 @@ renderAll();
 renderPassTabs();
 renderPass();
 renderNotifyInfo();
+renderInstall();
 scheduleReminder();
 </script>
 
