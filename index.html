@@ -6,8 +6,11 @@
 <meta name="theme-color" content="#f3f4ef">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Fuldkrop">
-<title>Fuldkropsprogram 6 uger</title>
+<meta name="apple-mobile-web-app-title" content="Træning">
+<title>Louises træning</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=JetBrains+Mono:wght@500..700&display=swap">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0}img{max-width:100%}[hidden]{display:none!important}</style>
@@ -339,14 +342,57 @@ ul.plain li::marker { color: var(--accent); }
   background: var(--surface);
   color: var(--muted);
 }
+
+/* ---------- Personlig: i dag, fremskridt, påmindelser ---------- */
+.banner {
+  margin: 12px 0 0;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--rest) 14%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--rest) 40%, var(--line));
+  font-weight: 600;
+}
+.todaycard { margin-top: 18px; }
+.todaycard .kicker { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.todaycard h2.t { all: unset; display: block; margin: 4px 0 2px; font-size: clamp(26px, 7vw, 32px); font-weight: 800; font-stretch: 92%; line-height: 1.1; }
+.todaycard .lede { font-size: 15px; margin-bottom: 4px; }
+.todaycard .exlist { margin: 10px 0 4px; padding-left: 20px; color: var(--muted); font-size: 15px; }
+.todaycard .actions { display: grid; gap: 8px; margin-top: 12px; }
+.todaycard .done { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--accent); margin-top: 10px; }
+.todaycard.isdone { background: color-mix(in srgb, var(--accent) 10%, var(--surface)); }
+.check { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 99px; background: var(--accent); color: var(--accent-fg); font-size: 13px; font-weight: 800; flex: none; }
+.miss { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 99px; border: 1.5px dashed var(--rest); flex: none; }
+.day span { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.day.isdone { opacity: .85; }
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-bottom: 14px; }
+.stat { padding: 10px 12px; border-radius: 12px; background: var(--bg); min-width: 0; }
+.stat b { display: block; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 24px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.stat span { font-size: 12px; color: var(--muted); }
+.weeks { display: grid; gap: 6px; }
+.wk { display: grid; grid-template-columns: 54px repeat(6, minmax(0, 1fr)); gap: 4px; align-items: center; font-size: 13px; color: var(--muted); }
+.wk.cur { color: var(--fg); font-weight: 700; }
+.dot { height: 14px; border-radius: 4px; background: color-mix(in srgb, var(--fg) 9%, transparent); }
+.dot.on { background: var(--accent); }
+.dot.missed { background: color-mix(in srgb, var(--rest) 35%, transparent); }
+.settings { display: grid; gap: 12px; }
+.field { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; font-weight: 600; }
+.field input { font: inherit; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; min-height: 44px; }
+.setbtns { display: grid; gap: 8px; }
+.small { margin: 0; font-size: 13px; color: var(--muted); }
+.small:empty { display: none; }
+button.linkish { justify-self: start; border: 0; background: none; padding: 0; min-height: 0; color: var(--muted); text-decoration: underline; font-size: 14px; }
 </style>
 
 <div class="wrap">
   <header>
-    <p class="eyebrow">6 uger · 3 programmer · 30 sek arbejde / 30 sek pause · 5 runder</p>
-    <h1>Fuldkropsprogram 6 uger</h1>
-    <p class="lede">Seks træningspas om ugen med tre forskellige programmer. Hver øvelse laves i 5 runder.</p>
+    <p class="eyebrow" id="hEyebrow">6 uger · 3 programmer · 30 sek arbejde / 30 sek pause · 5 runder</p>
+    <h1 id="hHello">Hej Louise</h1>
+    <p class="lede" id="hLede">Seks træningspas om ugen med tre forskellige programmer. Hver øvelse laves i 5 runder.</p>
   </header>
+
+  <div class="banner" id="reminder" hidden role="status"></div>
+
+  <section class="card todaycard" id="today" aria-labelledby="todayTitle"></section>
 
   <section id="timer" class="card" hidden aria-live="polite">
     <div class="row"><span id="tPas"></span><span id="tEx"></span></div>
@@ -364,6 +410,12 @@ ul.plain li::marker { color: var(--accent); }
 
   <h2>Ugeplan</h2>
   <div class="days" id="days"></div>
+
+  <h2>Dine fremskridt</h2>
+  <div class="card">
+    <div class="stats" id="stats"></div>
+    <div class="weeks" id="weeks" aria-label="Gennemførte pas pr. uge"></div>
+  </div>
 
   <h2>Programmer</h2>
   <div class="tabs" id="passTabs" role="group" aria-label="Vælg program"></div>
@@ -385,6 +437,18 @@ ul.plain li::marker { color: var(--accent); }
       <li><strong>Uge 3–4:</strong> tungere håndvægte, lavere knæ-variant eller hurtigere tempo.</li>
       <li><strong>Uge 5–6:</strong> ekstra runde (6 i stedet for 5) på udvalgte øvelser, eller pausen forkortes til 20 sek.</li>
     </ul>
+  </div>
+
+  <h2>Påmindelser og indstillinger</h2>
+  <div class="card settings">
+    <label class="field"><span>Mind mig om træningen kl.</span><input type="time" id="setTime" value="18:00"></label>
+    <div class="setbtns">
+      <button type="button" id="btnNotify">Slå notifikationer til</button>
+      <button type="button" id="btnIcs">Læg påmindelser i kalenderen</button>
+    </div>
+    <p class="small" id="notifyInfo"></p>
+    <label class="field"><span>Programmet startede</span><input type="date" id="setStart"></label>
+    <button type="button" class="linkish" id="btnReset">Nulstil fremskridt</button>
   </div>
 
   <p class="note">Har du smerter i led eller ryg, så skift til en lettere variant. Har du skader, medicinske tilstande eller ikke trænet før, så tal med en læge eller fysioterapeut inden start.</p>
@@ -493,17 +557,335 @@ function figSvg(p, q, name) {
   return `<svg class="fig" viewBox="0 0 160 120" role="img" aria-label="Illustration af ${esc(name)}"><line class="floor" x1="8" y1="112" x2="152" y2="112"/>${lines}<circle cx="${p.h[0]}" cy="${p.h[1]}" r="7">${headAnim}</circle></svg>`;
 }
 
+const NAME = "Louise";
+const WEEKS = 6;
+const TOTAL = WEEKS * SCHEDULE.filter(([, p]) => p).length;
+const STORE_KEY = "louise-training-v1";
+
+/* Alt gemmes kun i Louises egen browser. */
+function loadStore() {
+  try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch (e) { return {}; }
+}
+const store = Object.assign({ start: "", done: {}, remindAt: "18:00", notify: false }, loadStore());
+function save() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(store)); } catch (e) { /* valgfri */ }
+}
+
+const pad = (n) => String(n).padStart(2, "0");
+const ymd = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const parseYmd = (s) => { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); };
+const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+const dayIdx = (d) => (d.getDay() + 6) % 7;
+const mondayOf = (d) => addDays(new Date(d.getFullYear(), d.getMonth(), d.getDate()), -dayIdx(d));
+const passOn = (d) => SCHEDULE[dayIdx(d)][1];
+
+if (!store.start) { store.start = ymd(mondayOf(new Date())); save(); }
+
+function programDay(d) {
+  return Math.round((parseYmd(ymd(d)) - parseYmd(store.start)) / 86400000);
+}
+function weekOf(d) { return Math.floor(programDay(d) / 7) + 1; }
+function isDone(d) { return Boolean(store.done[ymd(d)]); }
+
+function markDone(d, pas) {
+  store.done[ymd(d)] = pas;
+  save();
+  renderAll();
+}
+function unmarkDone(d) {
+  delete store.done[ymd(d)];
+  save();
+  renderAll();
+}
+
+function greeting(now) {
+  const h = now.getHours();
+  if (h < 5) return "Godnat";
+  if (h < 10) return "Godmorgen";
+  if (h < 12) return "God formiddag";
+  if (h < 18) return "God eftermiddag";
+  return "Godaften";
+}
+
+function reminderDue(now) {
+  const [h, m] = (store.remindAt || "18:00").split(":").map(Number);
+  return now.getHours() * 60 + now.getMinutes() >= h * 60 + m;
+}
+
+/* Seneste træningsdag i denne uge før i dag, som ikke er gennemført. */
+function missedThisWeek(now) {
+  const out = [];
+  for (let d = mondayOf(now); ymd(d) < ymd(now); d = addDays(d, 1)) {
+    if (programDay(d) >= 0 && passOn(d) && !isDone(d)) out.push(d);
+  }
+  return out;
+}
+
+function renderHeader(now) {
+  const day = programDay(now);
+  const wk = weekOf(now);
+  let eyebrow, lede;
+  if (day < 0) {
+    eyebrow = `Starter ${SCHEDULE[dayIdx(parseYmd(store.start))][0].toLowerCase()} d. ${parseYmd(store.start).getDate()}/${parseYmd(store.start).getMonth() + 1}`;
+    lede = "Dit 6-ugers program er klar. Vi ses på første træningsdag!";
+  } else if (wk > WEEKS) {
+    eyebrow = "Program gennemført";
+    lede = `Du har klaret ${Object.keys(store.done).length} af ${TOTAL} pas på 6 uger. Stærkt gået!`;
+  } else {
+    eyebrow = `Uge ${wk} af ${WEEKS} · ${SCHEDULE[dayIdx(now)][0]}`;
+    lede = "Her er dagens træning. Du klarer det!";
+  }
+  $("hEyebrow").textContent = eyebrow;
+  $("hHello").textContent = `${greeting(now)}, ${NAME}`;
+  $("hLede").textContent = lede;
+}
+
+function renderToday(now) {
+  const pas = passOn(now);
+  const card = $("today");
+  const inProgram = programDay(now) >= 0 && weekOf(now) <= WEEKS;
+  const done = isDone(now);
+  card.classList.toggle("isdone", done);
+
+  if (!inProgram) {
+    card.innerHTML = `<div class="kicker">I dag</div><h2 class="t" id="todayTitle">Fri træning</h2>
+      <p class="lede">Du kan altid tage et af pasene herunder, når du har lyst.</p>`;
+    return;
+  }
+  if (!pas) {
+    card.innerHTML = `<div class="kicker">I dag</div><h2 class="t" id="todayTitle">Hviledag</h2>
+      <p class="lede">Kroppen bliver stærkere, når den hviler. Gå en tur, stræk ud, og nyd dagen.</p>`;
+    return;
+  }
+  const p = PASSES[pas];
+  card.innerHTML = `
+    <div class="kicker">Dagens træning</div>
+    <h2 class="t" id="todayTitle">${esc(p.title)}: ${esc(p.focus)}</h2>
+    <p class="lede">6 øvelser · 5 runder · ca. 35 min</p>
+    <ol class="exlist">${p.items.map(it => `<li>${esc(it.n)}</li>`).join("")}</ol>
+    ${done
+      ? `<div class="done"><span class="check">✓</span>Gennemført i dag. Godt gået, ${NAME}!</div>
+         <div class="actions"><button type="button" class="linkish" data-undo>Fortryd</button></div>`
+      : `<div class="actions">
+           <button type="button" class="primary start" data-start="${pas}">Start ${esc(p.title)}</button>
+           <button type="button" data-mark="${pas}">Jeg har trænet i dag</button>
+         </div>`}
+  `;
+}
+
+function renderReminder(now) {
+  const el = $("reminder");
+  const pas = passOn(now);
+  const inProgram = programDay(now) >= 0 && weekOf(now) <= WEEKS;
+  let msg = "";
+  if (inProgram && pas && !isDone(now) && reminderDue(now)) {
+    msg = `${NAME}, du mangler stadig dagens træning (${PASSES[pas].title}). Der er tid endnu!`;
+  } else if (inProgram) {
+    const missed = missedThisWeek(now);
+    if (missed.length) {
+      const names = missed.map(d => SCHEDULE[dayIdx(d)][0].toLowerCase());
+      const list = names.length > 1 ? names.slice(0, -1).join(", ") + " og " + names.at(-1) : names[0];
+      msg = `Du nåede ikke ${list} i denne uge. Det er helt okay, bare fortsæt i dag.`;
+    }
+  }
+  el.textContent = msg;
+  el.hidden = !msg;
+}
+
 function renderDays() {
-  const jsDay = new Date().getDay();
-  const todayIdx = (jsDay + 6) % 7;
+  const now = new Date();
+  const mon = mondayOf(now);
+  const todayIdx = dayIdx(now);
   $("days").innerHTML = SCHEDULE.map(([day, pas], i) => {
+    const d = addDays(mon, i);
     const isToday = i === todayIdx;
+    const done = isDone(d);
+    const missed = pas && !done && i < todayIdx && programDay(d) >= 0;
     const pill = pas
       ? `<span class="pill">Pas ${pas}</span>`
       : `<span class="pill ghost">Hviledag</span>`;
-    const today = isToday ? ` <span class="pill">I dag</span>` : "";
-    return `<div class="day ${isToday ? "today" : ""}"><strong>${day}</strong><span>${pill}${today}</span></div>`;
+    const today = isToday ? `<span class="pill">I dag</span>` : "";
+    const mark = done ? `<span class="check" aria-label="Gennemført">✓</span>` : missed ? `<span class="miss" aria-label="Ikke gennemført"></span>` : "";
+    return `<div class="day ${isToday ? "today" : ""} ${done ? "isdone" : ""}"><strong>${day}</strong><span>${pill}${today}${mark}</span></div>`;
   }).join("");
+}
+
+function streak(now) {
+  /* Antal træningsdage i træk (hviledage tæller ikke), hvor i dag ikke bryder kæden, før den er gået. */
+  let n = 0;
+  let d = isDone(now) ? now : addDays(now, -1);
+  for (let guard = 0; guard < 60 && programDay(d) >= 0; guard++, d = addDays(d, -1)) {
+    if (!passOn(d)) continue;
+    if (!isDone(d)) break;
+    n++;
+  }
+  return n;
+}
+
+function renderStats(now) {
+  const count = Object.keys(store.done).filter(k => k >= store.start).length;
+  const curWeek = Math.min(Math.max(weekOf(now), 1), WEEKS);
+  $("stats").innerHTML = `
+    <div class="stat"><b>${count}</b><span>af ${TOTAL} pas</span></div>
+    <div class="stat"><b>${streak(now)}</b><span>i træk</span></div>
+    <div class="stat"><b>${Math.max(0, Math.min(WEEKS, weekOf(now)))}</b><span>af ${WEEKS} uger</span></div>`;
+  const start = parseYmd(store.start);
+  let rows = "";
+  for (let w = 0; w < WEEKS; w++) {
+    let dots = "";
+    SCHEDULE.forEach(([, pas], i) => {
+      if (!pas) return;
+      const d = addDays(start, w * 7 + i);
+      const cls = isDone(d) ? "on" : ymd(d) < ymd(now) ? "missed" : "";
+      dots += `<i class="dot ${cls}" title="${ymd(d)}"></i>`;
+    });
+    rows += `<div class="wk ${w + 1 === curWeek && programDay(now) >= 0 ? "cur" : ""}"><span>Uge ${w + 1}</span>${dots}</div>`;
+  }
+  $("weeks").innerHTML = rows;
+}
+
+/* ---------- Påmindelser ---------- */
+let reminderTimer = null;
+
+async function showNotification(title, body) {
+  try {
+    const reg = navigator.serviceWorker && await navigator.serviceWorker.getRegistration();
+    if (reg) return reg.showNotification(title, { body, icon: "icon-192.png", badge: "icon-192.png", tag: "traening" });
+    new Notification(title, { body, icon: "icon-192.png" });
+  } catch (e) { /* valgfri */ }
+}
+
+function scheduleReminder() {
+  clearTimeout(reminderTimer);
+  if (!store.notify || !("Notification" in window) || Notification.permission !== "granted") return;
+  const now = new Date();
+  const [h, m] = store.remindAt.split(":").map(Number);
+  let at = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m);
+  if (at <= now) at = addDays(at, 1);
+  reminderTimer = setTimeout(() => {
+    const d = new Date();
+    const pas = passOn(d);
+    if (pas && !isDone(d) && programDay(d) >= 0 && weekOf(d) <= WEEKS) {
+      showNotification(`Hej ${NAME}, tid til træning`, `Du mangler stadig ${PASSES[pas].title}: ${PASSES[pas].focus}.`);
+    }
+    renderAll();
+    scheduleReminder();
+  }, Math.min(at - now, 2 ** 31 - 1));
+}
+
+function renderNotifyInfo() {
+  const btn = $("btnNotify");
+  const info = $("notifyInfo");
+  if (!("Notification" in window)) {
+    btn.disabled = true;
+    btn.textContent = "Notifikationer virker ikke her";
+    info.textContent = "På iPhone: tryk Del → Føj til hjemmeskærm og åbn appen derfra. Ellers brug kalender-påmindelser.";
+    return;
+  }
+  const on = store.notify && Notification.permission === "granted";
+  btn.textContent = on ? "Notifikationer er slået til" : "Slå notifikationer til";
+  btn.setAttribute("aria-pressed", on);
+  info.textContent = Notification.permission === "denied"
+    ? "Notifikationer er blokeret i browserens indstillinger."
+    : on ? "Du får besked, hvis dagens pas ikke er gennemført, så længe appen er åben eller ligger i baggrunden. Kalender-påmindelser virker altid." : "";
+}
+
+$("btnNotify").addEventListener("click", async () => {
+  if (store.notify && Notification.permission === "granted") {
+    store.notify = false;
+  } else {
+    const res = await Notification.requestPermission();
+    store.notify = res === "granted";
+    if (store.notify) showNotification(`Super, ${NAME}!`, `Du får en påmindelse kl. ${store.remindAt}, hvis du mangler dagens træning.`);
+  }
+  save();
+  renderNotifyInfo();
+  scheduleReminder();
+});
+
+function buildIcs() {
+  const [h, m] = store.remindAt.split(":").map(Number);
+  const start = parseYmd(store.start);
+  const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+/, "");
+  const dt = (d) => `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}T${pad(h)}${pad(m)}00`;
+  const events = [];
+  for (let i = 0; i < WEEKS * 7; i++) {
+    const d = addDays(start, i);
+    const pas = passOn(d);
+    if (!pas) continue;
+    const end = new Date(d); end.setHours(h, m + 35);
+    events.push([
+      "BEGIN:VEVENT",
+      `UID:louise-${ymd(d)}@louise-training`,
+      `DTSTAMP:${stamp}`,
+      `DTSTART:${dt(d)}`,
+      `DTEND:${end.getFullYear()}${pad(end.getMonth() + 1)}${pad(end.getDate())}T${pad(end.getHours())}${pad(end.getMinutes())}00`,
+      `SUMMARY:Træning: ${PASSES[pas].title} (${PASSES[pas].focus})`,
+      `DESCRIPTION:Hej ${NAME}! Dagens træning: ${PASSES[pas].items.map(it => it.n).join(", ")}. Åbn appen og tryk Start.`,
+      `URL:${location.href.split("#")[0]}`,
+      "BEGIN:VALARM", "ACTION:DISPLAY", `DESCRIPTION:Tid til træning, ${NAME}`, "TRIGGER:PT0M", "END:VALARM",
+      "END:VEVENT"
+    ].join("\r\n"));
+  }
+  return ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Louise-training//DA", "CALSCALE:GREGORIAN", ...events, "END:VCALENDAR"].join("\r\n");
+}
+
+$("btnIcs").addEventListener("click", () => {
+  const blob = new Blob([buildIcs()], { type: "text/calendar;charset=utf-8" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "traening-louise.ics";
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+});
+
+$("setTime").value = store.remindAt;
+$("setTime").addEventListener("change", (e) => {
+  store.remindAt = e.target.value || "18:00";
+  save();
+  scheduleReminder();
+  renderAll();
+});
+
+$("setStart").value = store.start;
+$("setStart").addEventListener("change", (e) => {
+  if (!e.target.value) return;
+  store.start = e.target.value;
+  save();
+  renderAll();
+});
+
+$("btnReset").addEventListener("click", () => {
+  if (!confirm("Vil du slette alle gennemførte pas og starte forfra i dag?")) return;
+  store.done = {};
+  store.start = ymd(mondayOf(new Date()));
+  $("setStart").value = store.start;
+  save();
+  renderAll();
+});
+
+$("today").addEventListener("click", (e) => {
+  const s = e.target.closest("button[data-start]");
+  if (s) return startSession(Number(s.dataset.start));
+  const m = e.target.closest("button[data-mark]");
+  if (m) return markDone(new Date(), Number(m.dataset.mark));
+  if (e.target.closest("button[data-undo]")) unmarkDone(new Date());
+});
+
+function renderAll() {
+  const now = new Date();
+  renderHeader(now);
+  renderToday(now);
+  renderReminder(now);
+  renderDays();
+  renderStats(now);
+}
+
+document.addEventListener("visibilitychange", () => { if (!document.hidden) renderAll(); });
+
+if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+  navigator.serviceWorker.register("sw.js").catch(() => {});
 }
 
 let currentPass = 1;
@@ -673,7 +1055,8 @@ function finish() {
   beep(1040);
   $("tPhase").textContent = "Færdig";
   $("tPhase").className = "phase skift";
-  $("tName").textContent = "Pas gennemført. Godt gået!";
+  $("tName").textContent = `Pas gennemført. Godt gået, ${NAME}!`;
+  if (!isDone(new Date())) markDone(new Date(), st.pas);
   $("tEx").textContent = "";
   $("tRound").textContent = "";
   $("tNext").textContent = "";
@@ -695,9 +1078,12 @@ $("btnPause").addEventListener("click", togglePause);
 $("btnSkip").addEventListener("click", skip);
 $("btnStop").addEventListener("click", () => stopSession(false));
 
-renderDays();
+currentPass = passOn(new Date()) || 1;
+renderAll();
 renderPassTabs();
 renderPass();
+renderNotifyInfo();
+scheduleReminder();
 </script>
 
 </body></html>
