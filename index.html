@@ -735,27 +735,27 @@ button:active { transform: scale(.97); }
 <script>
 const WORK = 30, REST = 30, TRANS = 60, ROUNDS = 5;
 
-/* Hver øvelse peger på SATS' øvelsesside (sats.dk/ovelser/<slug>), hvor videoen hentes fra. */
+/* Hver øvelse peger på SATS' øvelsesside (sats.dk/ovelser/<slug>) og SATS' instruktionsvideo på YouTube (yt). */
 const PASSES = {
   1: {
     title: "Pas 1", focus: "Ben, bryst og core", gear: "Kettlebell og 2 håndvægte",
     items: [
-      { n: "Goblet squat", slug: "goblet-squat",
+      { n: "Goblet squat", slug: "goblet-squat", yt: "azvAoxn1vLY",
         steps: ["Hold kettlebellen med begge hænder tæt ind til brystet, fødderne lidt over skulderbredde.","Sæt hoften bagud og ned, mens albuerne peger ned mellem knæene.","Pres op gennem hælene, og hold brystet løftet hele vejen."],
         alt: "Uden vægt, eller sid ned på en stol og rejs dig igen" },
-      { n: "Brystpres med håndvægte", slug: "chest-press-dumbbell",
+      { n: "Brystpres med håndvægte", slug: "chest-press-dumbbell", yt: "b2RLEbpyW9M",
         steps: ["Lig på en bænk eller på gulvet med en håndvægt i hver hånd ved brystet.","Pres vægtene op, til armene er strakte over brystet.","Sænk langsomt og kontrolleret ned til brystet."],
         alt: "Lettere håndvægte, eller pres én arm ad gangen" },
-      { n: "Udfald med håndvægte", slug: "front-lunges-dumbbells",
+      { n: "Udfald med håndvægte", slug: "front-lunges-dumbbells", yt: "jwjna8BW9aU",
         steps: ["Tag et stort skridt frem og sænk dig, til bagerste knæ næsten rører gulvet.","Forreste knæ står over ankel, og overkroppen er oprejst.","Skub dig op og skift ben til næste runde."],
         alt: "Udfald med én hånd på en stol for balance" },
-      { n: "Hip thrust med vægt", slug: "hip-thrust-barbell",
-        steps: ["Sid med ryggen mod en sofa eller seng og knæene bøjet, fødderne i gulvet.","Løft hoften op, til kroppen danner en linje fra knæ til skulder.","Pres i balderne i toppen, og sænk langsomt igen."],
-        alt: "Hold toppen i to sekunder hver runde" },
-      { n: "Russian twist med kettlebell", slug: "russian-twist",
+      { n: "Glute bridge med vægt", slug: "glute-bridge", yt: "3K30XAmbSK0",
+        steps: ["Lig på ryggen med bøjede knæ, fødderne i gulvet og en håndvægt eller kettlebell på hoften.","Pres hoften op, til kroppen danner en linje fra knæ til skulder, og klem balderne sammen.","Sænk roligt, og hold fat i vægten hele tiden."],
+        alt: "Uden vægt, eller med fødderne lidt tættere på numsen" },
+      { n: "Russian twist med kettlebell", slug: "russian-twist", yt: "cW1rRI3cWco",
         steps: ["Sid med bøjede knæ, læn dig lidt tilbage og hold kettlebellen foran maven.","Drej overkroppen og før vægten ned ved siden af hoften.","Drej roligt over til den anden side, og hold ryggen lang."],
         alt: "Uden vægt, og med hælene i gulvet" },
-      { n: "Plank med roning", slug: "renegade-row",
+      { n: "Plank med roning", slug: "renegade-row", yt: "6h2KYspkrvQ",
         steps: ["Stå i høj plank med hænderne på to håndvægte og fødderne lidt fra hinanden.","Træk den ene vægt op mod hoften, uden at hoften drejer.","Sæt vægten ned igen, og skift arm."],
         alt: "Plank på knæene uden roning" }
     ]
@@ -763,22 +763,22 @@ const PASSES = {
   2: {
     title: "Pas 2", focus: "Bagkæde, skuldre og arme", gear: "Kettlebell og 2 håndvægte",
     items: [
-      { n: "Kettlebell swing", slug: "kettlebell-swing",
+      { n: "Kettlebell swing", slug: "kettlebell-swing", yt: "t4AVvIBpsUQ",
         steps: ["Stå lidt bredere end hoftebredde med kettlebellen i begge hænder.","Skub hoften bagud, så klokken svinger ind mellem benene, ryggen lige.","Stræk hoften eksplosivt frem, så klokken svinger op til brysthøjde. Armene er kun med som reb."],
         alt: "Rumænsk markløft med kettlebellen i roligt tempo" },
-      { n: "Skulderpres med håndvægte", slug: "seated-shoulder-press-handvaegte",
+      { n: "Skulderpres med håndvægte", slug: "seated-shoulder-press-handvaegte", yt: "O-z2yUDo3mc",
         steps: ["Stå oprejst med vægterne i skulderhøjde og håndfladerne fremad.","Pres vægterne lige op over hovedet, uden at svaje i ryggen.","Sænk dem kontrolleret tilbage til skulderhøjde."],
         alt: "Modstandsbånd under fødderne, hænderne på båndet" },
-      { n: "Etarms-roning", slug: "single-hand-row",
+      { n: "Etarms-roning", slug: "single-hand-row", yt: "_lRbcEwVHWY",
         steps: ["Stå med let bøjede knæ og hæld overkroppen frem fra hoften, ryggen lige.","Træk vægterne ind mod siden af maven, og før albuerne tæt langs kroppen.","Stræk armene ud igen, uden at runde ryggen."],
         alt: "Modstandsbånd fastgjort ved hoftehøjde" },
-      { n: "Rumænsk markløft", slug: "deadlift-straight-leg-dumbbell",
+      { n: "Rumænsk markløft", slug: "deadlift-straight-leg-dumbbell", yt: "7lt_GfFMC5k",
         steps: ["Stå med vægterne foran lårene, knæene let bøjet.","Skub hofterne bagud og lad vægterne glide tæt langs benene, ryggen lige.","Stræk hoften frem igen, og spænd balderne i toppen."],
         alt: "Vandflasker eller en tung bog som vægt" },
-      { n: "Bicepscurl", slug: "standing-dumbbell-curl",
+      { n: "Bicepscurl", slug: "standing-dumbbell-curl", yt: "C3NefF37ljU",
         steps: ["Stå oprejst med vægterne ved siden af kroppen, håndfladerne fremad.","Bøj albuerne og løft vægterne op mod skuldrene, albuerne tæt på siden.","Sænk langsomt til strakte arme."],
         alt: "Lettere vægt eller vandflasker" },
-      { n: "Triceps over hovedet", slug: "overhead-tricep-extension",
+      { n: "Triceps over hovedet", slug: "overhead-tricep-extension", yt: "cu5vp7UyqzU",
         steps: ["Hold én håndvægt eller kettlebell med begge hænder over hovedet.","Bøj albuerne og sænk vægten ned bag nakken, albuerne peger frem.","Stræk armene op igen, uden at svaje i ryggen."],
         alt: "Siddende på en stol med en lettere vægt" }
     ]
@@ -786,22 +786,22 @@ const PASSES = {
   3: {
     title: "Pas 3", focus: "Helkrop, balance og mave", gear: "Kettlebell og 2 håndvægte",
     items: [
-      { n: "Thrusters", slug: "thrusters-with-dumbbell",
+      { n: "Thrusters", slug: "thrusters-with-dumbbell", yt: "Bd_C5Cq1dLo",
         steps: ["Hold håndvægtene ved skuldrene og stå i squat-stilling.","Gå ned i en squat med brystet løftet.","Rejs dig eksplosivt og pres vægterne op over hovedet i samme bevægelse."],
         alt: "Squat og skulderpres hver for sig, uden fart" },
-      { n: "Step-ups med håndvægte", slug: "step-up-dumbbell",
+      { n: "Step-ups med håndvægte", slug: "step-up-dumbbell", yt: "C7loVybWnp4",
         steps: ["Stå foran en bænk eller et trappetrin med hele foden på.","Træd op med det ene ben, og træk det andet op ved siden af.","Gå ned igen kontrolleret, og skift ben til næste runde."],
         alt: "Lavere trin, eller træd op uden at løfte bagbenet helt" },
-      { n: "Clean and press", slug: "clean-and-press",
+      { n: "Clean and press", slug: "clean-and-press", yt: "7DIN1F3bevI",
         steps: ["Stå med en håndvægt i hver hånd foran lårene, fødderne i hoftebredde.","Gå ned i en kort squat, og træk vægtene op til skuldrene i én hurtig bevægelse.","Pres vægtene op over hovedet, sænk dem roligt til skuldrene og ned igen."],
         alt: "Lettere vægte, og lav clean og pres som to rolige bevægelser" },
-      { n: "Sideløft", slug: "side-lateral-raise",
+      { n: "Sideløft", slug: "side-lateral-raise", yt: "jDP6I_m1_t4",
         steps: ["Stå med en let håndvægt i hver hånd ned langs siden.","Løft armene ud til siden, til de er i skulderhøjde, med let bøjede albuer.","Sænk langsomt igen."],
         alt: "Én arm ad gangen, eller helt uden vægt" },
-      { n: "Et-bens markløft med kettlebell", slug: "deadlift-single-hand-kettlebell",
+      { n: "Et-bens markløft med kettlebell", slug: "deadlift-single-hand-kettlebell", yt: "ztGVc9sqhvo",
         steps: ["Stå på ét ben med kettlebellen i modsatte hånd.","Vip overkroppen frem, mens det frie ben går lige bagud, ryggen lige.","Rejs dig op igen, og skift ben til næste runde."],
         alt: "Med tåen i gulvet bag dig for balance" },
-      { n: "Dead bug med kettlebell", slug: "dead-bug",
+      { n: "Dead bug med kettlebell", slug: "dead-bug", yt: "qPVwRWLcu0o",
         steps: ["Læg dig på ryggen med armene pegende mod loftet og knæene over hofterne.","Stræk modsatte arm og ben langsomt ud mod gulvet, mens ryggen presses ned.","Vend tilbage til udgangsstillingen og skift side."],
         alt: "Kun arme eller kun ben ad gangen" }
     ]
