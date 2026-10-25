@@ -164,20 +164,6 @@ button[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-co
 .ex .alt { margin-top: 4px; font-size: 14px; color: var(--muted); }
 .ex .alt b { color: var(--fg); font-weight: 600; }
 
-.fig {
-  display: block;
-  width: 100%;
-  max-width: 200px;
-  height: auto;
-  margin: 2px 0 8px;
-  background: var(--bg);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-}
-.fig * { stroke: var(--fg); fill: none; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
-.fig circle { fill: var(--fg); stroke: none; }
-.fig .wt { fill: var(--accent); }
-.fig .floor { stroke: var(--line); stroke-width: 2; }
 
 #timer { margin-bottom: 8px; }
 .row { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; color: var(--muted); font-size: 14px; font-variant-numeric: tabular-nums; }
@@ -314,13 +300,6 @@ h2::after { content: ""; flex: 1; height: 1px; background: var(--line); }
   font-size: 13px;
 }
 
-.fig {
-  max-width: 240px;
-  margin: 4px 0 10px;
-  border-radius: 14px;
-  background: color-mix(in srgb, var(--accent) 6%, var(--bg));
-  border-color: transparent;
-}
 
 #timer {
   padding: 22px;
@@ -396,7 +375,7 @@ body {
     var(--bg);
   background-attachment: fixed;
 }
-h1, .todaycard h2.t, .passhead strong, .ex h3, .exname, .install h3 {
+h1, .todaycard h2.t, .passhead strong, .ex h3, .exname, .install h3, .vtitle {
   font-family: var(--serif);
   font-stretch: normal;
   letter-spacing: 0;
@@ -423,7 +402,6 @@ button.primary, .start { background: linear-gradient(135deg, var(--accent), colo
 .day { border-radius: 16px; }
 .day.today { background: var(--blush); border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); }
 .pill { background: color-mix(in srgb, var(--accent) 88%, var(--rest)); }
-.fig { background: var(--blush); }
 .stat { background: var(--blush); border-radius: 16px; }
 .stat b { font-family: var(--serif); font-size: 34px; font-weight: 600; color: var(--accent); }
 .banner { border-radius: 16px; background: color-mix(in srgb, var(--rest) 12%, var(--surface)); }
@@ -470,16 +448,11 @@ details.history summary { cursor: pointer; font-weight: 600; color: var(--accent
   #printArea { display: block; font-family: "Jost", sans-serif; }
   #printArea h1 { font-family: var(--serif); font-size: 34px; margin: 0 0 2px; color: #222; }
   #printArea .meta { color: #666; margin: 0 0 14px; }
-  #printArea .pex { display: grid; grid-template-columns: 130px 1fr; gap: 14px; padding: 10px 0; border-top: 1px solid #ddd; break-inside: avoid; }
+  #printArea .pex { display: block; padding: 10px 0; border-top: 1px solid #ddd; break-inside: avoid; }
   #printArea h3 { font-family: var(--serif); font-size: 20px; margin: 0 0 4px; }
   #printArea ol { margin: 0; padding-left: 18px; font-size: 13px; }
   #printArea .palt { font-size: 12px; color: #555; margin-top: 4px; }
   #printArea .rounds { margin-top: 6px; font-size: 13px; letter-spacing: .3em; }
-  #printArea .fig { max-width: 130px; background: #fff; border: 1px solid #ddd; }
-  #printArea .fig * { stroke: #222; }
-  #printArea .fig circle { fill: #222; }
-  #printArea .fig .wt { fill: #999; }
-  #printArea .fig .floor { stroke: #ccc; }
   #printArea .pfoot { margin-top: 12px; font-size: 12px; color: #555; }
 }
 
@@ -488,163 +461,349 @@ details.history summary { cursor: pointer; font-weight: 600; color: var(--accent
 #tVideo { margin-top: 12px; }
 .todaycard .exlist a { color: inherit; text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent); text-underline-offset: 3px; }
 .todaycard .small { margin-top: 4px; }
+
+/* ---------- Videoafspiller ---------- */
+.player {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  margin: 4px 0 12px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--blush) center / cover no-repeat;
+}
+.player video { display: block; width: 100%; height: 100%; object-fit: cover; background: #000; }
+.player .play {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  display: grid; place-items: center; align-content: center; gap: 8px;
+  border: 0; border-radius: 0; background: linear-gradient(transparent 40%, rgba(40,10,25,.35));
+  color: #fff; font-weight: 600; font-size: 14px; letter-spacing: .04em;
+}
+.playicon { width: 56px; height: 56px; border-radius: 99px; background: rgba(255,255,255,.92); box-shadow: 0 6px 20px rgba(0,0,0,.2); position: relative; }
+.playicon::after { content: ""; position: absolute; left: 22px; top: 17px; border-left: 18px solid var(--accent); border-top: 11px solid transparent; border-bottom: 11px solid transparent; }
+.playtxt { text-shadow: 0 1px 4px rgba(0,0,0,.4); }
+.player.loading .playicon { animation: pulse 1s ease-in-out infinite; }
+@keyframes pulse { 50% { transform: scale(.9); opacity: .7; } }
+.satslink { display: inline-block; margin-top: 8px; font-size: 13px; color: var(--muted); }
+
+/* ---------- App-layout: menu i bunden ---------- */
+html { -webkit-tap-highlight-color: transparent; }
+body { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); overscroll-behavior-y: none; }
+.wrap { padding-top: 12px; }
+.vtitle { font-size: clamp(38px, 11vw, 48px); margin: 8px 0 18px; }
+.view > h2:first-of-type { margin-top: 8px; }
+.tabbar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  padding: 6px max(8px, env(safe-area-inset-left, 0px)) calc(6px + env(safe-area-inset-bottom, 0px)) max(8px, env(safe-area-inset-right, 0px));
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  -webkit-backdrop-filter: saturate(1.6) blur(18px);
+  backdrop-filter: saturate(1.6) blur(18px);
+  border-top: 1px solid var(--line);
+}
+.tabbar a {
+  display: grid; justify-items: center; gap: 3px; padding: 6px 0 2px;
+  color: var(--muted); text-decoration: none; font-size: 11px; font-weight: 500; letter-spacing: .02em;
+  -webkit-user-select: none; user-select: none;
+}
+.tabbar svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.tabbar a[aria-current="page"] { color: var(--accent); font-weight: 700; }
+.tabbar a[aria-current="page"] svg { stroke-width: 2.2; }
+
+/* Timer i fuld skærm */
+#timer {
+  position: fixed; inset: 0; z-index: 30; overflow-y: auto;
+  padding: calc(16px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  background: var(--bg); border: 0; border-radius: 0; box-shadow: none;
+}
+#timer .tinner { max-width: 560px; margin: 0 auto; min-height: 100%; display: flex; flex-direction: column; }
+#timer .controls { margin-top: auto; padding-top: 16px; }
+body.timing { overflow: hidden; }
+body.timing .tabbar { display: none; }
+.tvid { display: none; margin: 10px 0 4px; border-radius: 18px; overflow: hidden; aspect-ratio: 16 / 9; background: var(--blush); }
+.tvid.has { display: block; }
+.tvid video { width: 100%; height: 100%; object-fit: cover; display: block; }
+#timer .big { font-size: clamp(72px, 24vw, 120px); margin: 2px 0 8px; }
+
+/* ---------- Top-design: lag, lys og bevægelse ---------- */
+:root { --ease: cubic-bezier(.22, 1, .36, 1); --plum: #5b2340; }
+body::before {
+  content: ""; position: fixed; inset: -20vh -20vw auto auto; width: 70vw; height: 70vw; max-width: 520px; max-height: 520px; z-index: -1;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 22%, transparent), transparent 65%);
+  filter: blur(10px); animation: drift 18s ease-in-out infinite alternate; pointer-events: none;
+}
+body::after {
+  content: ""; position: fixed; left: -25vw; bottom: 10vh; width: 60vw; height: 60vw; max-width: 440px; max-height: 440px; z-index: -1;
+  background: radial-gradient(circle, color-mix(in srgb, var(--rest) 16%, transparent), transparent 65%);
+  animation: drift 22s ease-in-out infinite alternate-reverse; pointer-events: none;
+}
+@keyframes drift { to { transform: translate(-6vw, 8vh) scale(1.12); } }
+
+/* Visninger glider blødt ind, kort for kort */
+.view:not([hidden]) > * { animation: rise .6s var(--ease) both; }
+.view:not([hidden]) > *:nth-child(2) { animation-delay: .05s; }
+.view:not([hidden]) > *:nth-child(3) { animation-delay: .1s; }
+.view:not([hidden]) > *:nth-child(4) { animation-delay: .15s; }
+.view:not([hidden]) > *:nth-child(5) { animation-delay: .2s; }
+.view:not([hidden]) > *:nth-child(n+6) { animation-delay: .25s; }
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } }
+.day { animation: rise .5s var(--ease) both; }
+.days .day:nth-child(1) { animation-delay: .12s; } .days .day:nth-child(2) { animation-delay: .16s; }
+.days .day:nth-child(3) { animation-delay: .2s; } .days .day:nth-child(4) { animation-delay: .24s; }
+.days .day:nth-child(5) { animation-delay: .28s; } .days .day:nth-child(6) { animation-delay: .32s; }
+.days .day:nth-child(7) { animation-delay: .36s; }
+
+/* Dagens træning som hero-kort */
+.todaycard {
+  position: relative; overflow: hidden; border: 0; color: #fff;
+  background: linear-gradient(150deg, #c45a7e 0%, #9c3a5d 45%, var(--plum) 100%);
+  box-shadow: 0 24px 48px -24px rgba(110, 30, 65, .65), inset 0 1px 0 rgba(255,255,255,.18);
+}
+.todaycard::before {
+  content: ""; position: absolute; right: -60px; top: -60px; width: 220px; height: 220px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,.28), transparent 70%); animation: drift 12s ease-in-out infinite alternate;
+}
+.todaycard > * { position: relative; }
+.todaycard .kicker { color: rgba(255,255,255,.75); }
+.todaycard h2.t { color: #fff; }
+.todaycard .lede, .todaycard .exlist { color: rgba(255,255,255,.82); }
+.todaycard .exlist li::marker { color: rgba(255,255,255,.6); }
+.todaycard .start { background: #fff; color: var(--plum); box-shadow: 0 10px 24px -12px rgba(0,0,0,.45); }
+.todaycard .btnrow button, .todaycard .actions > button:not(.start):not(.linkish) {
+  background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.28); color: #fff;
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+}
+.todaycard .linkish { color: rgba(255,255,255,.85); }
+.todaycard.isdone { background: linear-gradient(150deg, #d07e98, #a8476a 55%, var(--plum)); }
+.todaycard .done { color: #fff; }
+.todaycard .check { background: #fff; color: var(--accent); animation: pop .6s var(--ease) both; }
+@keyframes pop { 0% { transform: scale(0); } 60% { transform: scale(1.25); } }
+[data-theme="dark"] .todaycard .start, .todaycard .start { color: var(--plum); }
+
+/* Knapper og kort føles fysiske */
+button, .tabbar a, .video, .satslink { transition: transform .2s var(--ease), background-color .25s, box-shadow .25s, color .2s; }
+button:active { transform: scale(.97); }
+.card { transition: transform .3s var(--ease), box-shadow .3s; }
+.tabbar a[aria-current="page"] svg { animation: tabpop .45s var(--ease); }
+@keyframes tabpop { 40% { transform: translateY(-3px) scale(1.12); } }
+.tabbar a { position: relative; }
+.tabbar a[aria-current="page"]::before {
+  content: ""; position: absolute; top: -7px; width: 22px; height: 3px; border-radius: 0 0 3px 3px; background: var(--accent);
+  animation: rise .4s var(--ease) both;
+}
+.tabs button { transition: background-color .3s var(--ease), color .3s, box-shadow .3s; }
+
+/* Øvelseskort */
+.ex { display: block; padding: 22px 0; animation: rise .55s var(--ease) both; animation-delay: calc(var(--i, 0) * 60ms); }
+.exhead { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.exhead h3 { margin: 0; }
+.ex .n { flex: none; }
+.player { box-shadow: 0 14px 30px -20px rgba(110, 30, 65, .55); }
+.player .play:active .playicon { transform: scale(.92); }
+.playicon { transition: transform .25s var(--ease); }
+.player video { animation: fadein .4s ease both; }
+@keyframes fadein { from { opacity: 0; } }
+
+/* Timer: ring og farvede faser */
+#timer { transition: background-color .6s ease; }
+#timer[data-phase="work"] { background: linear-gradient(180deg, color-mix(in srgb, var(--work) 16%, var(--bg)), var(--bg) 70%); }
+#timer[data-phase="rest"] { background: linear-gradient(180deg, color-mix(in srgb, var(--rest) 18%, var(--bg)), var(--bg) 70%); }
+#timer[data-phase="done"] { background: linear-gradient(180deg, var(--blush), var(--bg) 70%); }
+#timer:not([hidden]) .tinner { animation: rise .5s var(--ease) both; }
+.ring { position: relative; width: min(64vw, 260px); aspect-ratio: 1; margin: 6px auto 4px; display: grid; place-items: center; }
+.ring svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.ring circle { fill: none; stroke-width: 9; }
+.ring .track { stroke: color-mix(in srgb, var(--fg) 9%, transparent); }
+.ring .prog { stroke: var(--work); stroke-linecap: round; stroke-dasharray: 100; stroke-dashoffset: 100; transition: stroke-dashoffset .25s linear, stroke .4s; filter: drop-shadow(0 4px 10px color-mix(in srgb, var(--work) 40%, transparent)); }
+#timer[data-phase="rest"] .ring .prog { stroke: var(--rest); }
+#timer[data-phase="skift"] .ring .prog { stroke: var(--muted); }
+#timer .ring .big { margin: 0; font-size: clamp(64px, 20vw, 104px); }
+#timer[data-phase="work"] .big { animation: beat 1s ease-in-out infinite; }
+@keyframes beat { 50% { transform: scale(1.03); } }
+#timer .exname { text-align: center; }
+#timer .phase { text-align: center; margin-top: 8px; }
+
+.confetti { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 40; pointer-events: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
 </style>
 
 <div class="wrap">
-  <header>
-    <p class="eyebrow" id="hEyebrow">3 programmer · 6 dage om ugen · 30/30 sek · 5 runder</p>
-    <h1 id="hHello">Hej Louise</h1>
-    <p class="lede" id="hLede">Tre programmer, der kører på skift mandag til lørdag, uge efter uge. Søndag er hviledag.</p>
-  </header>
+  <section class="view" data-view="idag">
+    <header>
+      <p class="eyebrow" id="hEyebrow">3 programmer · 6 dage om ugen · 30/30 sek · 5 runder</p>
+      <h1 id="hHello">Hej Louise</h1>
+      <p class="lede" id="hLede">Tre programmer, der kører på skift mandag til lørdag, uge efter uge. Søndag er hviledag.</p>
+    </header>
 
-  <div class="banner" id="reminder" hidden role="status"></div>
+    <div class="banner" id="reminder" hidden role="status"></div>
 
-  <section class="card todaycard" id="today" aria-labelledby="todayTitle"></section>
+    <section class="card todaycard" id="today" aria-labelledby="todayTitle"></section>
 
-  <section class="card install" id="install" hidden>
-    <button type="button" class="x" id="installClose" aria-label="Luk">×</button>
-    <h3>Hent appen på din telefon</h3>
-    <div id="installBody"></div>
+    <section class="card install" id="install" hidden>
+      <button type="button" class="x" id="installClose" aria-label="Luk">×</button>
+      <h3>Hent appen på din telefon</h3>
+      <div id="installBody"></div>
+    </section>
+
+    <h2>Ugeplan</h2>
+    <div class="days" id="days"></div>
   </section>
 
-  <section id="timer" class="card" hidden aria-live="polite">
+  <section class="view" data-view="programmer" hidden>
+    <h1 class="vtitle">Programmer</h1>
+    <div class="tabs" id="passTabs" role="group" aria-label="Vælg program"></div>
+    <div class="card" id="passView"></div>
+  </section>
+
+  <section class="view" data-view="fremskridt" hidden>
+    <h1 class="vtitle">Fremskridt</h1>
+    <div class="card">
+      <div class="stats" id="stats"></div>
+      <div class="cal" id="cal" aria-label="Kalender over de seneste uger"></div>
+      <div class="legend"><span><i style="background:var(--accent)"></i>Gennemført</span><span><i style="border:1.5px dashed var(--rest)"></i>Ikke nået</span><span><i style="border:1px solid var(--line)"></i>Kommende</span></div>
+      <details class="history" id="history"><summary></summary><ul class="histlist" id="histList"></ul></details>
+    </div>
+  </section>
+
+  <section class="view" data-view="mere" hidden>
+    <h1 class="vtitle">Mere</h1>
+    <h2>Påmindelser og indstillinger</h2>
+    <div class="card settings">
+      <label class="field"><span>Mind mig om træningen kl.</span><input type="time" id="setTime" value="18:00"></label>
+      <div class="setbtns">
+        <button type="button" id="btnNotify">Slå notifikationer til</button>
+        <button type="button" id="btnIcs">Læg påmindelser i kalenderen</button>
+      </div>
+      <p class="small" id="notifyInfo"></p>
+      <label class="field"><span>Jeg startede</span><input type="date" id="setStart"></label>
+      <button type="button" class="linkish" id="btnReset">Nulstil fremskridt</button>
+    </div>
+
+    <h2>Før og efter</h2>
+    <div class="card">
+      <ul class="plain">
+        <li><strong>Opvarmning (5 min):</strong> let jog på stedet, armcirkler, hofte- og skulderrotationer og 10 luftsquats.</li>
+        <li><strong>Nedkøling (5 min):</strong> let gang og stræk af lår, lægge, hofter, bryst og skuldre, 30 sek pr. side.</li>
+        <li><strong>Pause mellem øvelser:</strong> 60 sek for at gøre klar til næste station.</li>
+      </ul>
+    </div>
+
+    <h2>Progression</h2>
+    <div class="card">
+      <ul class="plain">
+        <li><strong>Kom i gang:</strong> let belastning og roligt tempo. Fokus på teknik.</li>
+        <li><strong>Når det føles let:</strong> tungere håndvægte, sværere variant eller hurtigere tempo.</li>
+        <li><strong>Klar til mere:</strong> ekstra runde (6 i stedet for 5) på udvalgte øvelser, eller pausen forkortes til 20 sek.</li>
+      </ul>
+    </div>
+
+    <p class="note">Videoerne er fra SATS (sats.dk/ovelser). Har du smerter i led eller ryg, så skift til en lettere variant. Har du skader, medicinske tilstande eller ikke trænet før, så tal med en læge eller fysioterapeut inden start.</p>
+  </section>
+</div>
+
+<section id="timer" hidden aria-live="polite">
+  <div class="tinner">
     <div class="row"><span id="tPas"></span><span id="tEx"></span></div>
+    <div class="tvid" id="tVidBox"><video id="tVid" muted loop playsinline autoplay></video></div>
     <div class="phase" id="tPhase"></div>
     <div class="exname" id="tName"></div>
-    <div class="big" id="tSec">30</div>
-    <div class="bar"><i id="tBar"></i></div>
+    <div class="ring">
+      <svg viewBox="0 0 200 200" aria-hidden="true"><circle class="track" cx="100" cy="100" r="88"/><circle class="prog" id="tRing" cx="100" cy="100" r="88" pathLength="100"/></svg>
+      <div class="big" id="tSec">30</div>
+    </div>
+    <div class="bar" hidden><i id="tBar"></i></div>
     <div class="row" style="margin-top:10px"><span id="tRound"></span><span id="tNext"></span></div>
-    <a class="video" id="tVideo" href="#" target="_blank" rel="noopener">▶ Se video af øvelsen</a>
     <div class="controls">
       <button id="btnPause" class="primary" type="button">Pause</button>
       <button id="btnSkip" type="button">Spring over</button>
       <button id="btnStop" type="button">Stop</button>
     </div>
-  </section>
-
-  <h2>Ugeplan</h2>
-  <div class="days" id="days"></div>
-
-  <h2>Dine fremskridt</h2>
-  <div class="card">
-    <div class="stats" id="stats"></div>
-    <div class="cal" id="cal" aria-label="Kalender over de seneste uger"></div>
-    <div class="legend"><span><i style="background:var(--accent)"></i>Gennemført</span><span><i style="border:1.5px dashed var(--rest)"></i>Ikke nået</span><span><i style="border:1px solid var(--line)"></i>Kommende</span></div>
-    <details class="history" id="history"><summary></summary><ul class="histlist" id="histList"></ul></details>
   </div>
+</section>
 
-  <h2>Programmer</h2>
-  <div class="tabs" id="passTabs" role="group" aria-label="Vælg program"></div>
-  <div class="card" id="passView"></div>
-
-  <h2>Før og efter</h2>
-  <div class="card">
-    <ul class="plain">
-      <li><strong>Opvarmning (5 min):</strong> let jog på stedet, armcirkler, hofte- og skulderrotationer og 10 luftsquats.</li>
-      <li><strong>Nedkøling (5 min):</strong> let gang og stræk af lår, lægge, hofter, bryst og skuldre, 30 sek pr. side.</li>
-      <li><strong>Pause mellem øvelser:</strong> 60 sek for at gøre klar til næste station.</li>
-    </ul>
-  </div>
-
-  <h2>Progression</h2>
-  <div class="card">
-    <ul class="plain">
-      <li><strong>Kom i gang:</strong> let belastning og roligt tempo. Fokus på teknik.</li>
-      <li><strong>Når det føles let:</strong> tungere håndvægte, sværere variant eller hurtigere tempo.</li>
-      <li><strong>Klar til mere:</strong> ekstra runde (6 i stedet for 5) på udvalgte øvelser, eller pausen forkortes til 20 sek.</li>
-    </ul>
-  </div>
-
-  <h2>Påmindelser og indstillinger</h2>
-  <div class="card settings">
-    <label class="field"><span>Mind mig om træningen kl.</span><input type="time" id="setTime" value="18:00"></label>
-    <div class="setbtns">
-      <button type="button" id="btnNotify">Slå notifikationer til</button>
-      <button type="button" id="btnIcs">Læg påmindelser i kalenderen</button>
-    </div>
-    <p class="small" id="notifyInfo"></p>
-    <label class="field"><span>Jeg startede</span><input type="date" id="setStart"></label>
-    <button type="button" class="linkish" id="btnReset">Nulstil fremskridt</button>
-  </div>
-
-  <p class="note">Har du smerter i led eller ryg, så skift til en lettere variant. Har du skader, medicinske tilstande eller ikke trænet før, så tal med en læge eller fysioterapeut inden start.</p>
-</div>
+<nav class="tabbar" aria-label="Menu">
+  <a href="#idag" data-nav="idag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/></svg><span>I dag</span></a>
+  <a href="#programmer" data-nav="programmer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6M6 6.5v11M18 6.5v11M21 9v6M6 12h12"/></svg><span>Programmer</span></a>
+  <a href="#fremskridt" data-nav="fremskridt"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/><path d="m8.5 14.5 2.2 2 4.8-4.5"/></svg><span>Fremskridt</span></a>
+  <a href="#mere" data-nav="mere"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M5.6 18.4l1.8-1.8M16.6 7.4l1.8-1.8"/></svg><span>Mere</span></a>
+</nav>
 
 <div id="printArea" aria-hidden="true"></div>
 
 <script>
 const WORK = 30, REST = 30, TRANS = 60, ROUNDS = 5;
 
-/* Hver øvelse har to stillinger: p (start) og q (slut). Hoved (h) og linjer (l) har samme form i begge,
-   så bevægelsen kan animeres mellem dem. Vægte (w) tegnes som små cirkler. Gulv ved y=112 i en 160x120 boks. */
+/* Hver øvelse peger på SATS' øvelsesside (sats.dk/ovelser/<slug>), hvor videoen hentes fra. */
 const PASSES = {
   1: {
     title: "Pas 1", focus: "Ben, bryst og core", gear: "Kettlebell og 2 håndvægte",
     items: [
-      { n: "Goblet squat", video: "https://www.sats.dk/ovelser/goblet-squat", steps: ["Hold kettlebellen med begge hænder tæt ind til brystet, fødderne lidt over skulderbredde.","Sæt hoften bagud og ned, mens albuerne peger ned mellem knæene.","Pres op gennem hælene, og hold brystet løftet hele vejen."], alt: "Uden vægt, eller sid ned på en stol og rejs dig igen",
-        p: { h: [70,30], l: [[[70,38],[70,66]],[[70,44],[82,54],[80,46]],[[70,66],[90,80],[82,112]],[[66,66],[84,82],[76,112]]], w: [[82,46]] },
-        q: { h: [70,22], l: [[[70,30],[70,62]],[[70,36],[82,46],[80,38]],[[70,62],[74,88],[72,112]],[[70,62],[66,88],[66,112]]], w: [[82,38]] } },
-      { n: "Brystpres med håndvægte", video: "https://www.sats.dk/ovelser/chest-press-dumbbell", steps: ["Lig på en bænk eller på gulvet med en håndvægt i hver hånd ved brystet.","Pres vægtene op, til armene er strakte over brystet.","Sænk langsomt og kontrolleret ned til brystet."], alt: "Lettere håndvægte, eller pres én arm ad gangen",
-        p: { h: [26,102], l: [[[34,104],[90,104]],[[90,104],[106,82],[118,110]],[[48,104],[58,106],[58,90]]], w: [[58,86]] },
-        q: { h: [26,102], l: [[[34,104],[90,104]],[[90,104],[106,82],[118,110]],[[48,104],[50,86],[50,68]]], w: [[50,64]] } },
-      { n: "Udfald med håndvægte", video: "https://www.sats.dk/ovelser/front-lunges-dumbbells", steps: ["Tag et stort skridt frem og sænk dig, til bagerste knæ næsten rører gulvet.","Forreste knæ står over ankel, og overkroppen er oprejst.","Skub dig op og skift ben til næste runde."], alt: "Udfald med én hånd på en stol for balance",
-        p: { h: [80,22], l: [[[80,30],[80,60]],[[80,36],[76,62]],[[80,36],[86,62]],[[80,60],[62,80],[62,112]],[[80,60],[104,98],[120,112]]], w: [[76,67],[86,67]] },
-        q: { h: [80,22], l: [[[80,30],[80,62]],[[80,36],[76,64]],[[80,36],[86,64]],[[80,62],[72,88],[70,112]],[[80,62],[90,88],[92,112]]], w: [[76,69],[86,69]] } },
-      { n: "Hip thrust med vægt", video: "https://www.sats.dk/ovelser/hip-thrust-barbell", steps: ["Sid med ryggen mod en sofa eller seng og knæene bøjet, fødderne i gulvet.","Løft hoften op, til kroppen danner en linje fra knæ til skulder.","Pres i balderne i toppen, og sænk langsomt igen."], alt: "Hold toppen i to sekunder hver runde",
-        p: { h: [34,90], l: [[[46,100],[92,62]],[[92,62],[120,62],[122,110]]], w: [[88,56]] },
-        q: { h: [34,94], l: [[[46,100],[92,100]],[[92,100],[118,72],[122,110]]], w: [[88,94]] } },
-      { n: "Russian twist med kettlebell", video: "https://www.sats.dk/ovelser/russian-twist", steps: ["Sid med bøjede knæ, læn dig lidt tilbage og hold kettlebellen foran maven.","Drej overkroppen og før vægten ned ved siden af hoften.","Drej roligt over til den anden side, og hold ryggen lang."], alt: "Uden vægt, og med hælene i gulvet",
-        p: { h: [58,64], l: [[[64,74],[82,104]],[[82,104],[104,86],[124,94]],[[66,78],[92,86]]], w: [[96,87]] },
-        q: { h: [58,64], l: [[[64,74],[82,104]],[[82,104],[104,86],[124,94]],[[66,78],[74,100]]], w: [[74,104]] } },
-      { n: "Plank med roning", video: "https://www.sats.dk/ovelser/renegade-row", steps: ["Stå i høj plank med hænderne på to håndvægte og fødderne lidt fra hinanden.","Træk den ene vægt op mod hoften, uden at hoften drejer.","Sæt vægten ned igen, og skift arm."], alt: "Plank på knæene uden roning",
-        p: { h: [30,66], l: [[[40,70],[130,78]],[[50,72],[50,108]],[[130,78],[144,110]],[[56,73],[57,92],[58,106]]], w: [[50,108],[58,108]] },
-        q: { h: [30,66], l: [[[40,70],[130,78]],[[50,72],[50,108]],[[130,78],[144,110]],[[56,73],[70,90],[64,78]]], w: [[50,108],[63,76]] } }
+      { n: "Goblet squat", slug: "goblet-squat",
+        steps: ["Hold kettlebellen med begge hænder tæt ind til brystet, fødderne lidt over skulderbredde.","Sæt hoften bagud og ned, mens albuerne peger ned mellem knæene.","Pres op gennem hælene, og hold brystet løftet hele vejen."],
+        alt: "Uden vægt, eller sid ned på en stol og rejs dig igen" },
+      { n: "Brystpres med håndvægte", slug: "chest-press-dumbbell",
+        steps: ["Lig på en bænk eller på gulvet med en håndvægt i hver hånd ved brystet.","Pres vægtene op, til armene er strakte over brystet.","Sænk langsomt og kontrolleret ned til brystet."],
+        alt: "Lettere håndvægte, eller pres én arm ad gangen" },
+      { n: "Udfald med håndvægte", slug: "front-lunges-dumbbells",
+        steps: ["Tag et stort skridt frem og sænk dig, til bagerste knæ næsten rører gulvet.","Forreste knæ står over ankel, og overkroppen er oprejst.","Skub dig op og skift ben til næste runde."],
+        alt: "Udfald med én hånd på en stol for balance" },
+      { n: "Hip thrust med vægt", slug: "hip-thrust-barbell",
+        steps: ["Sid med ryggen mod en sofa eller seng og knæene bøjet, fødderne i gulvet.","Løft hoften op, til kroppen danner en linje fra knæ til skulder.","Pres i balderne i toppen, og sænk langsomt igen."],
+        alt: "Hold toppen i to sekunder hver runde" },
+      { n: "Russian twist med kettlebell", slug: "russian-twist",
+        steps: ["Sid med bøjede knæ, læn dig lidt tilbage og hold kettlebellen foran maven.","Drej overkroppen og før vægten ned ved siden af hoften.","Drej roligt over til den anden side, og hold ryggen lang."],
+        alt: "Uden vægt, og med hælene i gulvet" },
+      { n: "Plank med roning", slug: "renegade-row",
+        steps: ["Stå i høj plank med hænderne på to håndvægte og fødderne lidt fra hinanden.","Træk den ene vægt op mod hoften, uden at hoften drejer.","Sæt vægten ned igen, og skift arm."],
+        alt: "Plank på knæene uden roning" }
     ]
   },
   2: {
     title: "Pas 2", focus: "Bagkæde, skuldre og arme", gear: "Kettlebell og 2 håndvægte",
     items: [
-      { n: "Kettlebell swing", video: "https://www.sats.dk/ovelser/kettlebell-swing", steps: ["Stå lidt bredere end hoftebredde med kettlebellen i begge hænder.","Skub hoften bagud, så klokken svinger ind mellem benene, ryggen lige.","Stræk hoften eksplosivt frem, så klokken svinger op til brysthøjde. Armene er kun med som reb."], alt: "Rumænsk markløft med kettlebellen i roligt tempo",
-        p: { h: [60,38], l: [[[66,44],[92,66]],[[68,48],[86,88]],[[92,66],[98,88],[94,112]],[[92,66],[86,88],[88,112]]], w: [[88,93]] },
-        q: { h: [86,22], l: [[[86,30],[86,66]],[[86,36],[118,40]],[[86,66],[88,88],[84,112]],[[86,66],[82,88],[80,112]]], w: [[123,40]] } },
-      { n: "Skulderpres med håndvægte", video: "https://www.sats.dk/ovelser/seated-shoulder-press-handvaegte", steps: ["Stå oprejst med vægterne i skulderhøjde og håndfladerne fremad.","Pres vægterne lige op over hovedet, uden at svaje i ryggen.","Sænk dem kontrolleret tilbage til skulderhøjde."], alt: "Modstandsbånd under fødderne, hænderne på båndet",
-        p: { h: [80,24], l: [[[80,34],[80,70]],[[80,40],[60,22]],[[80,40],[100,22]],[[80,70],[70,112]],[[80,70],[90,112]]], w: [[60,22],[100,22]] },
-        q: { h: [80,24], l: [[[80,34],[80,70]],[[80,40],[64,54]],[[80,40],[96,54]],[[80,70],[70,112]],[[80,70],[90,112]]], w: [[64,54],[96,54]] } },
-      { n: "Etarms-roning", video: "https://www.sats.dk/ovelser/single-hand-row", steps: ["Stå med let bøjede knæ og hæld overkroppen frem fra hoften, ryggen lige.","Træk vægterne ind mod siden af maven, og før albuerne tæt langs kroppen.","Stræk armene ud igen, uden at runde ryggen."], alt: "Modstandsbånd fastgjort ved hoftehøjde",
-        p: { h: [110,42], l: [[[60,70],[100,50]],[[100,50],[84,78]],[[60,70],[58,112]],[[60,70],[72,112]]], w: [[84,82]] },
-        q: { h: [110,42], l: [[[60,70],[100,50]],[[100,50],[96,74]],[[60,70],[58,112]],[[60,70],[72,112]]], w: [[96,78]] } },
-      { n: "Rumænsk markløft", video: "https://www.sats.dk/ovelser/deadlift-straight-leg-dumbbell", steps: ["Stå med vægterne foran lårene, knæene let bøjet.","Skub hofterne bagud og lad vægterne glide tæt langs benene, ryggen lige.","Stræk hoften frem igen, og spænd balderne i toppen."], alt: "Vandflasker eller en tung bog som vægt",
-        p: { h: [80,24], l: [[[72,32],[98,64]],[[72,36],[84,72]],[[98,64],[102,88],[98,112]],[[98,64],[92,88],[96,112]]], w: [[84,76]] },
-        q: { h: [78,24], l: [[[78,32],[78,64]],[[78,36],[84,72]],[[78,64],[80,88],[78,112]],[[78,64],[76,88],[74,112]]], w: [[84,76]] } },
-      { n: "Bicepscurl", video: "https://www.sats.dk/ovelser/standing-dumbbell-curl", steps: ["Stå oprejst med vægterne ved siden af kroppen, håndfladerne fremad.","Bøj albuerne og løft vægterne op mod skuldrene, albuerne tæt på siden.","Sænk langsomt til strakte arme."], alt: "Lettere vægt eller vandflasker",
-        p: { h: [80,22], l: [[[80,32],[80,70]],[[80,38],[68,58],[68,44]],[[80,38],[92,58],[92,44]],[[80,70],[70,112]],[[80,70],[90,112]]], w: [[68,44],[92,44]] },
-        q: { h: [80,22], l: [[[80,32],[80,70]],[[80,38],[70,58],[70,70]],[[80,38],[90,58],[90,70]],[[80,70],[70,112]],[[80,70],[90,112]]], w: [[70,70],[90,70]] } },
-      { n: "Triceps over hovedet", video: "https://www.sats.dk/ovelser/overhead-tricep-extension", steps: ["Hold én håndvægt eller kettlebell med begge hænder over hovedet.","Bøj albuerne og sænk vægten ned bag nakken, albuerne peger frem.","Stræk armene op igen, uden at svaje i ryggen."], alt: "Siddende på en stol med en lettere vægt",
-        p: { h: [80,34], l: [[[80,42],[80,76]],[[80,76],[72,112]],[[80,76],[88,112]],[[80,46],[88,22],[72,30]]], w: [[69,31]] },
-        q: { h: [80,34], l: [[[80,42],[80,76]],[[80,76],[72,112]],[[80,76],[88,112]],[[80,46],[86,22],[86,8]]], w: [[86,6]] } }
+      { n: "Kettlebell swing", slug: "kettlebell-swing",
+        steps: ["Stå lidt bredere end hoftebredde med kettlebellen i begge hænder.","Skub hoften bagud, så klokken svinger ind mellem benene, ryggen lige.","Stræk hoften eksplosivt frem, så klokken svinger op til brysthøjde. Armene er kun med som reb."],
+        alt: "Rumænsk markløft med kettlebellen i roligt tempo" },
+      { n: "Skulderpres med håndvægte", slug: "seated-shoulder-press-handvaegte",
+        steps: ["Stå oprejst med vægterne i skulderhøjde og håndfladerne fremad.","Pres vægterne lige op over hovedet, uden at svaje i ryggen.","Sænk dem kontrolleret tilbage til skulderhøjde."],
+        alt: "Modstandsbånd under fødderne, hænderne på båndet" },
+      { n: "Etarms-roning", slug: "single-hand-row",
+        steps: ["Stå med let bøjede knæ og hæld overkroppen frem fra hoften, ryggen lige.","Træk vægterne ind mod siden af maven, og før albuerne tæt langs kroppen.","Stræk armene ud igen, uden at runde ryggen."],
+        alt: "Modstandsbånd fastgjort ved hoftehøjde" },
+      { n: "Rumænsk markløft", slug: "deadlift-straight-leg-dumbbell",
+        steps: ["Stå med vægterne foran lårene, knæene let bøjet.","Skub hofterne bagud og lad vægterne glide tæt langs benene, ryggen lige.","Stræk hoften frem igen, og spænd balderne i toppen."],
+        alt: "Vandflasker eller en tung bog som vægt" },
+      { n: "Bicepscurl", slug: "standing-dumbbell-curl",
+        steps: ["Stå oprejst med vægterne ved siden af kroppen, håndfladerne fremad.","Bøj albuerne og løft vægterne op mod skuldrene, albuerne tæt på siden.","Sænk langsomt til strakte arme."],
+        alt: "Lettere vægt eller vandflasker" },
+      { n: "Triceps over hovedet", slug: "overhead-tricep-extension",
+        steps: ["Hold én håndvægt eller kettlebell med begge hænder over hovedet.","Bøj albuerne og sænk vægten ned bag nakken, albuerne peger frem.","Stræk armene op igen, uden at svaje i ryggen."],
+        alt: "Siddende på en stol med en lettere vægt" }
     ]
   },
   3: {
     title: "Pas 3", focus: "Helkrop, balance og mave", gear: "Kettlebell og 2 håndvægte",
     items: [
-      { n: "Thrusters", video: "https://www.sats.dk/ovelser/thrusters-with-dumbbell", steps: ["Hold håndvægtene ved skuldrene og stå i squat-stilling.","Gå ned i en squat med brystet løftet.","Rejs dig eksplosivt og pres vægterne op over hovedet i samme bevægelse."], alt: "Squat og skulderpres hver for sig, uden fart",
-        p: { h: [70,30], l: [[[70,38],[70,66]],[[70,44],[82,56],[80,42]],[[70,66],[90,80],[82,112]],[[66,66],[84,82],[76,112]]], w: [[80,40]] },
-        q: { h: [70,22], l: [[[70,30],[70,62]],[[70,36],[82,22],[84,8]],[[70,62],[74,88],[72,112]],[[70,62],[66,88],[66,112]]], w: [[84,6]] } },
-      { n: "Step-ups med håndvægte", video: "https://www.sats.dk/ovelser/step-up-dumbbell", steps: ["Stå foran en bænk eller et trappetrin med hele foden på.","Træd op med det ene ben, og træk det andet op ved siden af.","Gå ned igen kontrolleret, og skift ben til næste runde."], alt: "Lavere trin, eller træd op uden at løfte bagbenet helt",
-        p: { h: [96,22], l: [[[100,32],[100,60]],[[100,40],[100,64]],[[100,60],[114,70],[118,86]],[[100,60],[88,84],[88,112]],[[118,86],[142,86],[142,112]]], w: [[100,67]] },
-        q: { h: [118,22], l: [[[118,30],[118,58]],[[118,38],[118,62]],[[118,58],[120,72],[120,86]],[[118,58],[108,80],[106,112]],[[118,86],[142,86],[142,112]]], w: [[118,65]] } },
-      { n: "Clean and press", video: "https://www.sats.dk/ovelser/clean-and-press", steps: ["Stå med en håndvægt i hver hånd foran lårene, fødderne i hoftebredde.","Gå ned i en kort squat, og træk vægtene op til skuldrene i én hurtig bevægelse.","Pres vægtene op over hovedet, sænk dem roligt til skuldrene og ned igen."], alt: "Lettere vægte, og lav clean og pres som to rolige bevægelser",
-        p: { h: [70,30], l: [[[70,38],[70,66]],[[70,44],[80,62],[84,80]],[[70,66],[90,80],[82,112]],[[66,66],[84,82],[76,112]]], w: [[84,84]] },
-        q: { h: [70,22], l: [[[70,30],[70,62]],[[70,36],[82,22],[84,8]],[[70,62],[74,88],[72,112]],[[70,62],[66,88],[66,112]]], w: [[84,6]] } },
-      { n: "Sideløft", video: "https://www.sats.dk/ovelser/side-lateral-raise", steps: ["Stå med en let håndvægt i hver hånd ned langs siden.","Løft armene ud til siden, til de er i skulderhøjde, med let bøjede albuer.","Sænk langsomt igen."], alt: "Én arm ad gangen, eller helt uden vægt",
-        p: { h: [80,22], l: [[[80,32],[80,70]],[[80,70],[70,112]],[[80,70],[90,112]],[[80,38],[68,68]],[[80,38],[92,68]]], w: [[67,71],[93,71]] },
-        q: { h: [80,22], l: [[[80,32],[80,70]],[[80,70],[70,112]],[[80,70],[90,112]],[[80,38],[50,40]],[[80,38],[110,40]]], w: [[47,40],[113,40]] } },
-      { n: "Et-bens markløft med kettlebell", video: "https://www.sats.dk/ovelser/deadlift-single-hand-kettlebell", steps: ["Stå på ét ben med kettlebellen i modsatte hånd.","Vip overkroppen frem, mens det frie ben går lige bagud, ryggen lige.","Rejs dig op igen, og skift ben til næste runde."], alt: "Med tåen i gulvet bag dig for balance",
-        p: { h: [76,22], l: [[[76,30],[76,66]],[[76,36],[86,62]],[[76,66],[78,90],[76,112]],[[76,66],[74,90],[72,112]]], w: [[87,66]] },
-        q: { h: [46,56], l: [[[54,58],[88,66]],[[58,60],[60,92]],[[88,66],[90,90],[88,112]],[[88,66],[112,64],[136,60]]], w: [[60,96]] } },
-      { n: "Dead bug med kettlebell", video: "https://www.sats.dk/ovelser/dead-bug", steps: ["Læg dig på ryggen med armene pegende mod loftet og knæene over hofterne.","Stræk modsatte arm og ben langsomt ud mod gulvet, mens ryggen presses ned.","Vend tilbage til udgangsstillingen og skift side."], alt: "Kun arme eller kun ben ad gangen",
-        p: { h: [26,100], l: [[[40,104],[80,104]],[[48,102],[48,74]],[[80,104],[98,84],[106,70]],[[80,104],[122,100]]], w: [[48,70]] },
-        q: { h: [26,100], l: [[[40,104],[80,104]],[[48,102],[48,74]],[[80,104],[98,96],[112,108]],[[80,104],[104,70]]], w: [[48,70]] } }
+      { n: "Thrusters", slug: "thrusters-with-dumbbell",
+        steps: ["Hold håndvægtene ved skuldrene og stå i squat-stilling.","Gå ned i en squat med brystet løftet.","Rejs dig eksplosivt og pres vægterne op over hovedet i samme bevægelse."],
+        alt: "Squat og skulderpres hver for sig, uden fart" },
+      { n: "Step-ups med håndvægte", slug: "step-up-dumbbell",
+        steps: ["Stå foran en bænk eller et trappetrin med hele foden på.","Træd op med det ene ben, og træk det andet op ved siden af.","Gå ned igen kontrolleret, og skift ben til næste runde."],
+        alt: "Lavere trin, eller træd op uden at løfte bagbenet helt" },
+      { n: "Clean and press", slug: "clean-and-press",
+        steps: ["Stå med en håndvægt i hver hånd foran lårene, fødderne i hoftebredde.","Gå ned i en kort squat, og træk vægtene op til skuldrene i én hurtig bevægelse.","Pres vægtene op over hovedet, sænk dem roligt til skuldrene og ned igen."],
+        alt: "Lettere vægte, og lav clean og pres som to rolige bevægelser" },
+      { n: "Sideløft", slug: "side-lateral-raise",
+        steps: ["Stå med en let håndvægt i hver hånd ned langs siden.","Løft armene ud til siden, til de er i skulderhøjde, med let bøjede albuer.","Sænk langsomt igen."],
+        alt: "Én arm ad gangen, eller helt uden vægt" },
+      { n: "Et-bens markløft med kettlebell", slug: "deadlift-single-hand-kettlebell",
+        steps: ["Stå på ét ben med kettlebellen i modsatte hånd.","Vip overkroppen frem, mens det frie ben går lige bagud, ryggen lige.","Rejs dig op igen, og skift ben til næste runde."],
+        alt: "Med tåen i gulvet bag dig for balance" },
+      { n: "Dead bug med kettlebell", slug: "dead-bug",
+        steps: ["Læg dig på ryggen med armene pegende mod loftet og knæene over hofterne.","Stræk modsatte arm og ben langsomt ud mod gulvet, mens ryggen presses ned.","Vend tilbage til udgangsstillingen og skift side."],
+        alt: "Kun arme eller kun ben ad gangen" }
     ]
   }
 };
@@ -658,29 +817,56 @@ const SCHEDULE = [
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-const reduceMotion = () => window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const satsPage = (it) => `https://www.sats.dk/ovelser/${it.slug}`;
 
-function figSvg(p, q, name) {
-  const animate = !reduceMotion();
-  const pts = (arr) => arr.map(x => x.join(",")).join(" ");
-  const spline = `<animate calcMode="spline" keyTimes="0;0.5;1" keySplines=".45 0 .55 1;.45 0 .55 1" dur="2.6s" repeatCount="indefinite"`;
-  const lines = p.l.map((seg, i) => {
-    const a = pts(seg), b = pts(q.l[i]);
-    const anim = animate ? `${spline} attributeName="points" values="${a};${b};${a}"/>` : "";
-    return `<polyline points="${a}">${anim}</polyline>`;
-  }).join("");
-  const headAnim = animate
-    ? `${spline} attributeName="cx" values="${p.h[0]};${q.h[0]};${p.h[0]}"/>${spline} attributeName="cy" values="${p.h[1]};${q.h[1]};${p.h[1]}"/>`
-    : "";
-  const weights = (p.w || []).map((c, i) => {
-    const d = q.w[i];
-    const anim = animate
-      ? `${spline} attributeName="cx" values="${c[0]};${d[0]};${c[0]}"/>${spline} attributeName="cy" values="${c[1]};${d[1]};${c[1]}"/>`
-      : "";
-    return `<circle class="wt" cx="${c[0]}" cy="${c[1]}" r="5">${anim}</circle>`;
-  }).join("");
-  return `<svg class="fig" viewBox="0 0 160 120" role="img" aria-label="Illustration af ${esc(name)}"><line class="floor" x1="8" y1="112" x2="152" y2="112"/>${lines}${weights}<circle cx="${p.h[0]}" cy="${p.h[1]}" r="7">${headAnim}</circle></svg>`;
+/* ---------- SATS-videoer ---------- */
+const videoCache = new Map();
+function videoInfo(slug) {
+  if (!videoCache.has(slug)) {
+    const req = location.protocol.startsWith("http")
+      ? fetch(`api/video?slug=${encodeURIComponent(slug)}`).then(r => r.json()).catch(() => ({}))
+      : Promise.resolve({});
+    videoCache.set(slug, req);
+  }
+  return videoCache.get(slug);
 }
+
+function playerHtml(it) {
+  return `<div class="player" data-slug="${esc(it.slug)}">
+    <button type="button" class="play" data-play="${esc(it.slug)}" aria-label="Afspil video af ${esc(it.n)}"><span class="playicon"></span><span class="playtxt">Se video</span></button>
+  </div>`;
+}
+
+const posterObserver = "IntersectionObserver" in window ? new IntersectionObserver((entries) => {
+  entries.forEach(async (e) => {
+    if (!e.isIntersecting) return;
+    posterObserver.unobserve(e.target);
+    const info = await videoInfo(e.target.dataset.slug);
+    if (info.poster) e.target.style.backgroundImage = `url("${info.poster}?w=640&fm=webp")`;
+  });
+}, { rootMargin: "200px" }) : null;
+
+function watchPosters(root) {
+  if (posterObserver) root.querySelectorAll(".player[data-slug]").forEach(el => posterObserver.observe(el));
+}
+
+async function playIn(box) {
+  const slug = box.dataset.slug;
+  box.classList.add("loading");
+  const info = await videoInfo(slug);
+  box.classList.remove("loading");
+  if (!info.video) {
+    window.open(`https://www.sats.dk/ovelser/${slug}`, "_blank", "noopener");
+    return;
+  }
+  document.querySelectorAll(".player video").forEach(v => v.pause());
+  box.innerHTML = `<video src="${esc(info.video)}" ${info.poster ? `poster="${esc(info.poster)}?w=640"` : ""} controls playsinline autoplay loop muted></video>`;
+}
+
+document.addEventListener("click", (e) => {
+  const b = e.target.closest("button[data-play]");
+  if (b) playIn(b.closest(".player"));
+});
 
 const NAME = "Louise";
 const PER_WEEK = SCHEDULE.filter(([, p]) => p).length;
@@ -704,7 +890,7 @@ const dayIdx = (d) => (d.getDay() + 6) % 7;
 const mondayOf = (d) => addDays(new Date(d.getFullYear(), d.getMonth(), d.getDate()), -dayIdx(d));
 const passOn = (d) => SCHEDULE[dayIdx(d)][1];
 
-if (!store.start) { store.start = ymd(mondayOf(new Date())); save(); }
+if (!store.start) { store.start = ymd(new Date()); save(); }
 
 function programDay(d) {
   return Math.round((parseYmd(ymd(d)) - parseYmd(store.start)) / 86400000);
@@ -786,8 +972,8 @@ function renderToday(now) {
     <div class="kicker">Dagens træning</div>
     <h2 class="t" id="todayTitle">${esc(p.title)}: ${esc(p.focus)}</h2>
     <p class="lede">6 øvelser · 5 runder · ca. 35 min<br>Udstyr: ${esc(p.gear)}</p>
-    <ol class="exlist">${p.items.map(it => `<li><a href="${esc(it.video)}" target="_blank" rel="noopener">${esc(it.n)}</a></li>`).join("")}</ol>
-    <p class="small">Tryk på en øvelse for at se en video hos SATS.</p>
+    <ol class="exlist">${p.items.map(it => `<li>${esc(it.n)}</li>`).join("")}</ol>
+    <button type="button" class="linkish" data-show="${pas}">Se øvelserne med video</button>
     ${done
       ? `<div class="done"><span class="check">✓</span>Gennemført i dag. Godt gået, ${NAME}!</div>
          <div class="actions"><button type="button" data-print="${pas}">Print programmet</button><button type="button" class="linkish" data-undo>Fortryd</button></div>`
@@ -906,7 +1092,6 @@ function printPass(n) {
     <p class="meta"><b>Opvarmning (5 min):</b> let jog på stedet, armcirkler, hofte- og skulderrotationer og 10 luftsquats.</p>
     ${p.items.map((it, i) => `
       <div class="pex">
-        ${figSvg(it.q, it.q, it.n)}
         <div>
           <h3>${i + 1}. ${esc(it.n)}</h3>
           <ol>${it.steps.map(st => `<li>${esc(st)}</li>`).join("")}</ol>
@@ -1085,7 +1270,7 @@ $("setStart").addEventListener("change", (e) => {
 $("btnReset").addEventListener("click", () => {
   if (!confirm("Vil du slette alle gennemførte pas og starte forfra i dag?")) return;
   store.done = {};
-  store.start = ymd(mondayOf(new Date()));
+  store.start = ymd(new Date());
   $("setStart").value = store.start;
   save();
   renderAll();
@@ -1098,6 +1283,14 @@ $("today").addEventListener("click", (e) => {
   if (m) return markDone(new Date(), Number(m.dataset.mark));
   const pr = e.target.closest("button[data-print]");
   if (pr) return printPass(Number(pr.dataset.print));
+  const sh = e.target.closest("button[data-show]");
+  if (sh) {
+    currentPass = Number(sh.dataset.show);
+    renderPassTabs();
+    renderPass();
+    location.hash = "#programmer";
+    return;
+  }
   if (e.target.closest("button[data-undo]")) unmarkDone(new Date());
 });
 
@@ -1131,17 +1324,17 @@ function renderPass() {
     <button type="button" class="primary start" data-start="${currentPass}">Start ${esc(p.title)}</button>
     <button type="button" class="start" style="background:none;box-shadow:none;color:var(--accent);border:1px solid var(--line)" data-print="${currentPass}">Print ${esc(p.title)}</button>
     ${p.items.map((it, i) => `
-      <div class="ex">
-        <span class="n">${i + 1}</span>
+      <div class="ex" style="--i:${i}">
+        <div class="exhead"><span class="n">${i + 1}</span><h3>${esc(it.n)}</h3></div>
         <div>
-          <h3>${esc(it.n)}</h3>
-          ${figSvg(it.p, it.q, it.n)}
+          ${playerHtml(it)}
           <ol>${it.steps.map(s => `<li>${esc(s)}</li>`).join("")}</ol>
           <div class="alt"><b>Lettere:</b> ${esc(it.alt)}</div>
-          <a class="video" href="${esc(it.video)}" target="_blank" rel="noopener">▶ Se video hos SATS</a>
+          <a class="satslink" href="${satsPage(it)}" target="_blank" rel="noopener">Åbn hos SATS ↗</a>
         </div>
       </div>`).join("")}
   `;
+  watchPosters($("passView"));
 }
 
 $("passTabs").addEventListener("click", (e) => {
@@ -1203,10 +1396,13 @@ function startSession(n) {
   st.steps = buildSteps(n);
   st.idx = 0;
   $("timer").hidden = false;
+  document.body.classList.add("timing");
+  $("btnStop").textContent = "Stop";
+  $("btnPause").hidden = false;
+  $("btnSkip").hidden = false;
   keepAwake();
   enterStep();
   st.timer = setInterval(tick, 200);
-  $("timer").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function enterStep() {
@@ -1245,7 +1441,7 @@ function render() {
   $("tPhase").className = "phase " + (s.type === "work" ? "" : s.type);
 
   $("tName").textContent = s.type === "skift" ? `Næste: ${it.n}` : it.n;
-  $("tVideo").href = it.video;
+  setTimerVideo(it);
   $("tRound").textContent = s.type === "skift" ? "" : `Runde ${s.r} af ${ROUNDS}`;
 
   let nextText = "";
@@ -1256,6 +1452,23 @@ function render() {
   $("tSec").textContent = Math.ceil(rem / 1000);
   $("tBar").className = s.type === "work" ? "" : s.type;
   $("tBar").style.width = (frac * 100).toFixed(1) + "%";
+  $("tRing").style.strokeDashoffset = (100 - frac * 100).toFixed(2);
+  $("timer").dataset.phase = s.type;
+}
+
+let timerSlug = "";
+async function setTimerVideo(it) {
+  if (timerSlug === it.slug) return;
+  timerSlug = it.slug;
+  const v = $("tVid");
+  v.removeAttribute("src");
+  $("tVidBox").classList.remove("has");
+  const info = await videoInfo(it.slug);
+  if (timerSlug !== it.slug || !info.video) return;
+  v.src = info.video;
+  if (info.poster) v.poster = info.poster + "?w=640";
+  $("tVidBox").classList.add("has");
+  v.play().catch(() => {});
 }
 
 function togglePause() {
@@ -1296,7 +1509,14 @@ function finish() {
   $("tSec").textContent = "0";
   $("tBar").className = "";
   $("tBar").style.width = "100%";
+  $("tRing").style.strokeDashoffset = "0";
+  $("timer").dataset.phase = "done";
+  celebrate();
   $("btnPause").textContent = "Pause";
+  $("btnStop").textContent = "Luk";
+  $("btnPause").hidden = true;
+  $("btnSkip").hidden = true;
+  $("tVid").pause();
 }
 
 function stopSession(silent) {
@@ -1304,12 +1524,82 @@ function stopSession(silent) {
   st.timer = null;
   st.running = false;
   releaseAwake();
-  if (!silent) $("timer").hidden = true;
+  $("tVid").pause();
+  timerSlug = "";
+  if (!silent) {
+    $("timer").hidden = true;
+    document.body.classList.remove("timing");
+  }
 }
 
 $("btnPause").addEventListener("click", togglePause);
 $("btnSkip").addEventListener("click", skip);
 $("btnStop").addEventListener("click", () => stopSession(false));
+
+/* ---------- Fejring ---------- */
+function celebrate() {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const c = document.createElement("canvas");
+  c.className = "confetti";
+  document.body.appendChild(c);
+  const dpr = window.devicePixelRatio || 1;
+  c.width = innerWidth * dpr; c.height = innerHeight * dpr;
+  const ctx = c.getContext("2d");
+  ctx.scale(dpr, dpr);
+  const colors = ["#b0466a", "#e597b0", "#f3c9d5", "#d4a35a", "#fff3f6"];
+  const bits = Array.from({ length: 90 }, () => ({
+    x: innerWidth / 2 + (Math.random() - .5) * 80, y: innerHeight * .45,
+    vx: (Math.random() - .5) * 9, vy: -Math.random() * 11 - 4,
+    r: Math.random() * 5 + 3, a: Math.random() * Math.PI, va: (Math.random() - .5) * .3,
+    c: colors[(Math.random() * colors.length) | 0], heart: Math.random() < .35
+  }));
+  const t0 = performance.now();
+  (function frame(t) {
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    bits.forEach(b => {
+      b.vy += .28; b.vx *= .99; b.x += b.vx; b.y += b.vy; b.a += b.va;
+      ctx.save(); ctx.translate(b.x, b.y); ctx.rotate(b.a); ctx.fillStyle = b.c;
+      if (b.heart) {
+        const r = b.r;
+        ctx.beginPath(); ctx.moveTo(0, r * .6);
+        ctx.bezierCurveTo(-r * 1.4, -r * .4, -r * .5, -r * 1.3, 0, -r * .45);
+        ctx.bezierCurveTo(r * .5, -r * 1.3, r * 1.4, -r * .4, 0, r * .6);
+        ctx.fill();
+      } else ctx.fillRect(-b.r / 2, -b.r / 4, b.r, b.r / 2);
+      ctx.restore();
+    });
+    if (t - t0 < 3200) requestAnimationFrame(frame); else c.remove();
+  })(t0);
+}
+
+function countUp(root) {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  root.querySelectorAll(".stat b").forEach(el => {
+    const m = el.textContent.match(/^(\d+)(.*)$/);
+    if (!m) return;
+    const end = Number(m[1]), rest = m[2], t0 = performance.now();
+    (function step(t) {
+      const k = Math.min(1, (t - t0) / 700), e = 1 - Math.pow(1 - k, 3);
+      el.textContent = Math.round(end * e) + rest;
+      if (k < 1) requestAnimationFrame(step);
+    })(t0);
+  });
+}
+
+/* ---------- Menu i bunden ---------- */
+const VIEWS = ["idag", "programmer", "fremskridt", "mere"];
+function showView() {
+  const name = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : "idag";
+  document.querySelectorAll(".view").forEach(v => { v.hidden = v.dataset.view !== name; });
+  document.querySelectorAll(".tabbar a").forEach(a => {
+    if (a.dataset.nav === name) a.setAttribute("aria-current", "page");
+    else a.removeAttribute("aria-current");
+  });
+  window.scrollTo(0, 0);
+  if (name === "fremskridt") countUp($("stats"));
+}
+window.addEventListener("hashchange", showView);
+showView();
 
 currentPass = passOn(new Date()) || 1;
 renderAll();

@@ -1,5 +1,5 @@
 /* Gemmer appen, så den også åbner uden net, og åbner appen når man trykker på en påmindelse. */
-const CACHE = "louise-training-v4";
+const CACHE = "louise-training-v5";
 const FILES = ["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png"];
 
 self.addEventListener("install", (e) => {
