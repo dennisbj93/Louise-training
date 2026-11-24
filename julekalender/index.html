@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#faf5ef">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Julekalender">
+<title>Julekalender til mor</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Jost:wght@400;500;600&display=swap">
+<style>
+:root {
+  --bg: #faf5ef;
+  --surface: #ffffff;
+  --fg: #2f1f26;
+  --muted: #7d6a70;
+  --line: #eee1d8;
+  --accent: #8e2a43;
+  --accent-soft: #f6e3e6;
+  --gold: #b0843a;
+  --gold-soft: #f6ecd9;
+  --pine: #2f6150;
+  --pine-soft: #e2efe9;
+  --serif: "Cormorant Garamond", "Times New Roman", serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1a1316;
+    --surface: #251b1f;
+    --fg: #f6ece9;
+    --muted: #b9a5aa;
+    --line: #3a2c31;
+    --accent: #e4899f;
+    --accent-soft: #3b2129;
+    --gold: #e2b86c;
+    --gold-soft: #3a2f1e;
+    --pine: #8fcdb3;
+    --pine-soft: #1f3530;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1a1316; --surface: #251b1f; --fg: #f6ece9; --muted: #b9a5aa; --line: #3a2c31;
+  --accent: #e4899f; --accent-soft: #3b2129; --gold: #e2b86c; --gold-soft: #3a2f1e;
+  --pine: #8fcdb3; --pine-soft: #1f3530; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; overflow-x: clip; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Jost", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.45;
+  padding: env(safe-area-inset-top, 0px) max(16px, env(safe-area-inset-right, 0px)) env(safe-area-inset-bottom, 0px) max(16px, env(safe-area-inset-left, 0px));
+}
+.wrap { max-width: 640px; margin: 0 auto; padding: 28px 0 56px; }
+button { font: inherit; color: inherit; cursor: pointer; }
+[hidden] { display: none !important; }
+
+/* Hoved */
+header { text-align: center; margin-bottom: 22px; }
+.stars { color: var(--gold); letter-spacing: .5em; font-size: 12px; margin: 0 0 6px; }
+h1 {
+  font-family: var(--serif); font-weight: 600; font-size: 40px; line-height: 1.05;
+  margin: 0; letter-spacing: -.01em;
+}
+h1 em { color: var(--accent); font-style: italic; }
+.lead { color: var(--muted); margin: 8px 0 0; font-size: 15px; }
+
+/* Overblik */
+.summary {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 20px;
+  padding: 18px; display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: center;
+  box-shadow: 0 10px 30px -20px rgba(80, 20, 40, .35);
+}
+.ring { width: 92px; height: 92px; position: relative; }
+.ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.ring circle { fill: none; stroke-width: 8; }
+.ring .track { stroke: var(--line); }
+.ring .bar { stroke: var(--pine); stroke-linecap: round; transition: stroke-dashoffset .6s ease; }
+.ring .num {
+  position: absolute; inset: 0; display: grid; place-items: center; text-align: center;
+  font-family: var(--serif); font-weight: 700; font-size: 28px; line-height: 1;
+}
+.ring .num small { display: block; font-family: "Jost", sans-serif; font-weight: 500; font-size: 11px; color: var(--muted); margin-top: 2px; }
+.stats { display: grid; gap: 6px; font-size: 15px; }
+.stat { display: flex; align-items: center; gap: 8px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+.stat b { font-weight: 600; }
+.missing-days { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 13px; color: var(--muted); }
+.missing-days button {
+  border: 1px solid var(--line); background: var(--accent-soft); color: var(--accent);
+  border-radius: 999px; padding: 2px 10px; font-weight: 600; font-size: 13px;
+}
+.countdown { text-align: center; color: var(--gold); font-family: var(--serif); font-style: italic; font-size: 19px; margin: 16px 0 0; }
+
+/* Filter */
+.filters {
+  position: sticky; top: 0; z-index: 5; display: flex; gap: 6px; padding: 14px 0 10px;
+  background: linear-gradient(var(--bg) 80%, transparent);
+}
+.filters button {
+  flex: 1; border: 1px solid var(--line); background: var(--surface); border-radius: 999px;
+  padding: 9px 6px; font-size: 14px; font-weight: 500; color: var(--muted);
+}
+.filters button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .filters button[aria-pressed="true"] { color: #1a1316; } }
+
+/* Dage */
+.days { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.day {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
+  padding: 12px 14px 12px 12px; display: grid; grid-template-columns: 52px 1fr; gap: 12px;
+  scroll-margin-top: 70px; transition: border-color .2s, box-shadow .2s;
+}
+.day.today { border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-soft); }
+.day.flash { animation: flash 1.2s ease; }
+@keyframes flash { 0%, 100% { box-shadow: 0 0 0 0 transparent; } 30% { box-shadow: 0 0 0 4px var(--accent-soft); } }
+.badge {
+  width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; align-self: start;
+  font-family: var(--serif); font-weight: 700; font-size: 28px; line-height: 1;
+  background: var(--accent-soft); color: var(--accent); position: relative;
+}
+.day.bought .badge { background: var(--pine-soft); color: var(--pine); }
+.day.bought .badge::after {
+  content: "✓"; position: absolute; right: -5px; bottom: -5px; width: 20px; height: 20px; border-radius: 50%;
+  background: var(--pine); color: var(--surface); font: 600 12px/20px "Jost", sans-serif; text-align: center;
+}
+.meta { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 13px; color: var(--muted); }
+.meta .tag { font-weight: 600; letter-spacing: .02em; }
+.meta .tag.miss { color: var(--accent); }
+.meta .tag.ok { color: var(--pine); }
+.meta .tag.empty { color: var(--gold); }
+textarea {
+  display: block; width: 100%; margin: 2px 0 8px; padding: 6px 0; border: 0; border-bottom: 1px dashed var(--line);
+  background: transparent; color: var(--fg); resize: none; overflow: hidden;
+  font-family: var(--serif); font-size: 21px; font-weight: 600; line-height: 1.2; min-height: 34px;
+}
+.field { display: grid; grid-template-columns: 42px 1fr; align-items: baseline; gap: 6px; }
+.field > span { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+textarea.idea { font-family: "Jost", sans-serif; font-size: 15px; font-weight: 400; color: var(--muted); margin-bottom: 2px; min-height: 30px; }
+textarea::placeholder { color: var(--muted); opacity: .6; font-weight: 500; font-style: italic; }
+textarea:focus { outline: none; border-bottom-color: var(--accent); }
+.toggles { display: flex; gap: 8px; flex-wrap: wrap; }
+.toggle {
+  display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: transparent;
+  border-radius: 999px; padding: 6px 12px 6px 8px; font-size: 14px; color: var(--muted); min-height: 36px;
+}
+.toggle .box {
+  width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid currentColor; display: grid; place-items: center;
+  font-size: 11px; font-weight: 700;
+}
+.toggle[aria-pressed="true"].buy { background: var(--pine); border-color: var(--pine); color: var(--surface); }
+.toggle[aria-pressed="true"].wrap-t { background: var(--gold); border-color: var(--gold); color: var(--surface); }
+.toggle[aria-pressed="true"] .box::before { content: "✓"; }
+.empty-list { text-align: center; color: var(--muted); padding: 30px 0; font-style: italic; font-family: var(--serif); font-size: 20px; }
+
+/* Værktøjer */
+.tools { margin-top: 28px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.tools button, .tools label {
+  border: 1px solid var(--line); background: var(--surface); border-radius: 14px; padding: 12px;
+  font-size: 14px; font-weight: 500; text-align: center; cursor: pointer;
+}
+.tools .primary { grid-column: 1 / -1; background: var(--accent); border-color: var(--accent); color: #fff; font-size: 15px; }
+.hint { color: var(--muted); font-size: 13px; text-align: center; margin: 14px 0 0; }
+.toast {
+  position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%) translateY(20px);
+  background: var(--fg); color: var(--bg); padding: 10px 18px; border-radius: 999px; font-size: 14px;
+  opacity: 0; visibility: hidden; transition: .25s; pointer-events: none; white-space: nowrap;
+}
+.toast.show { visibility: visible; opacity: 1; transform: translateX(-50%); }
+
+/* Print */
+#print { display: none; }
+@media print {
+  @page { size: A4; margin: 14mm; }
+  body { background: #fff; color: #000; padding: 0; font-size: 11pt; }
+  .wrap { display: none; }
+  #print { display: block; }
+  #print h2 { font-family: var(--serif); font-size: 24pt; margin: 0 0 2mm; }
+  #print p { margin: 0 0 5mm; color: #555; }
+  #print table { width: 100%; border-collapse: collapse; }
+  #print th, #print td { border: 1px solid #999; padding: 1.6mm 2.5mm; text-align: left; vertical-align: top; }
+  #print th { background: #f1e6e8; }
+  #print td.c { text-align: center; width: 16mm; }
+  #print td.c { width: 14mm; } #print td.d { width: 28mm; white-space: nowrap; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="stars">✦ ✦ ✦</p>
+    <h1>Julekalender<br><em>til mor</em></h1>
+    <p class="lead">24 små gaver fra 1. til 24. december</p>
+  </header>
+
+  <section class="summary" aria-label="Overblik">
+    <div class="ring">
+      <svg viewBox="0 0 100 100" aria-hidden="true">
+        <circle class="track" cx="50" cy="50" r="42"></circle>
+        <circle class="bar" id="ringBar" cx="50" cy="50" r="42" stroke-dasharray="263.9" stroke-dashoffset="263.9"></circle>
+      </svg>
+      <div class="num"><div><span id="boughtNum">0</span><small>af 24 købt</small></div></div>
+    </div>
+    <div class="stats">
+      <div class="stat"><span class="dot" style="background:var(--pine)"></span><span><b id="sBought">0</b> købt</span></div>
+      <div class="stat"><span class="dot" style="background:var(--accent)"></span><span><b id="sMissing">0</b> mangler at blive købt</span></div>
+      <div class="stat"><span class="dot" style="background:var(--gold)"></span><span><b id="sWrapped">0</b> pakket ind</span></div>
+    </div>
+    <div class="missing-days" id="missingDays"></div>
+  </section>
+  <p class="countdown" id="countdown"></p>
+
+  <nav class="filters" aria-label="Vis">
+    <button type="button" data-filter="all" aria-pressed="true">Alle</button>
+    <button type="button" data-filter="missing" aria-pressed="false">Mangler</button>
+    <button type="button" data-filter="bought" aria-pressed="false">Købt</button>
+  </nav>
+
+  <ol class="days" id="days"></ol>
+  <p class="empty-list" id="emptyList" hidden></p>
+
+  <div class="tools">
+    <button type="button" class="primary" id="printBtn">Print listen</button>
+    <button type="button" id="shareBtn">Del som tekst</button>
+    <button type="button" id="backupBtn">Gem sikkerhedskopi</button>
+    <label>Hent sikkerhedskopi<input type="file" id="restoreInput" accept="application/json,.json" hidden></label>
+    <button type="button" id="resetBtn">Ryd alt</button>
+  </div>
+  <p class="hint">Alt gemmes automatisk på telefonen. Læg siden på hjemmeskærmen (Del → Føj til hjemmeskærm), så bliver listen liggende.</p>
+</div>
+
+<div id="print"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const KEY = "julekalender-mor-v1";
+const WEEKDAYS = ["søndag", "mandag", "tirsdag", "onsdag", "torsdag", "fredag", "lørdag"];
+/* Startliste fra Louises Word-dokument. Grønt markerede ideer er købt. */
+const IDEAS = [
+  "Lidt juleskum eller andet slik", "Krea fra ungerne", "Håndcreme", "The", "Krea",
+  "Noget til læberne", "Lidt sødt", "Krea (måske en tegning fra ungerne)", "Duftlys", "Serum",
+  "Julefrokost med far", "Lidt sødt", "Armbåndet fra Sisi", "Krea", "Noget hud halløj",
+  "Kakao", "Julehalløj fra Kähler? (Imerco Storecenteret)", "Neglelak?", "5 ting vi elsker ved mormor og morfar",
+  "Julehygge sokker", "Fodbad halløj", "Julekugle", "Julekugle – håber vi kan spise risengrød sammen", "",
+];
+const GIFTS = { 1: "Lidt sødt at begynde med", 2: "Krea fra ungerne" };
+const BOUGHT = [3, 4, 13, 22, 23];
+const START = IDEAS.map((idea, i) => {
+  const n = i + 1, bought = BOUGHT.includes(n);
+  return { idea, gift: GIFTS[n] || (bought ? idea : ""), bought };
+});
+const clean = (x) => ({ idea: String(x.idea || ""), gift: String(x.gift || ""), bought: !!x.bought, wrapped: !!x.wrapped });
+
+function blank() { return START.map(clean); }
+function load() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw) {
+      const d = JSON.parse(raw);
+      if (Array.isArray(d) && d.length === 24) return d.map(clean);
+    }
+  } catch (e) {}
+  return blank();
+}
+let data = load();
+function save() { try { localStorage.setItem(KEY, JSON.stringify(data)); } catch (e) {} }
+
+/* Julen i år: før 1. juli viser vi sidste års december, ellers dette års. */
+const now = new Date();
+const YEAR = now.getMonth() >= 6 ? now.getFullYear() : now.getFullYear() - 1;
+const weekday = (day) => WEEKDAYS[new Date(YEAR, 11, day).getDay()];
+const todayDay = now.getFullYear() === YEAR && now.getMonth() === 11 ? now.getDate() : 0;
+
+let filter = "all";
+const $ = (id) => document.getElementById(id);
+const list = $("days");
+
+function status(d) { return d.bought ? "ok" : (d.gift.trim() || d.idea.trim()) ? "miss" : "empty"; }
+const statusText = { ok: "Købt", miss: "Mangler", empty: "Ingen idé endnu" };
+
+function grow(t) { t.style.height = "auto"; t.style.height = t.scrollHeight + "px"; }
+
+function render() {
+  list.innerHTML = "";
+  data.forEach((d, i) => {
+    const n = i + 1;
+    const li = document.createElement("li");
+    li.className = "day" + (d.bought ? " bought" : "") + (n === todayDay ? " today" : "");
+    li.id = "dag-" + n;
+    li.dataset.i = i;
+    li.innerHTML = `
+      <div class="badge" aria-hidden="true">${n}</div>
+      <div>
+        <div class="meta"><span>${n === todayDay ? "I dag · " : ""}${weekday(n)} ${n}. december</span><span class="tag ${status(d)}">${statusText[status(d)]}</span></div>
+        <label class="field"><span>Idé</span><textarea rows="1" data-k="idea" class="idea" placeholder="Skriv en idé…" aria-label="Idé til ${n}. december"></textarea></label>
+        <label class="field"><span>Gave</span><textarea rows="1" data-k="gift" placeholder="Hvad blev det til?" aria-label="Gave til ${n}. december"></textarea></label>
+        <div class="toggles">
+          <button type="button" class="toggle buy" data-k="bought" aria-pressed="${d.bought}"><span class="box"></span>Købt</button>
+          <button type="button" class="toggle wrap-t" data-k="wrapped" aria-pressed="${d.wrapped}"><span class="box"></span>Pakket ind</button>
+        </div>
+      </div>`;
+    li.querySelectorAll("textarea").forEach((t) => (t.value = d[t.dataset.k]));
+    list.appendChild(li);
+  });
+  list.querySelectorAll("textarea").forEach(grow);
+  applyFilter();
+  updateSummary();
+}
+
+function applyFilter() {
+  let shown = 0;
+  list.querySelectorAll(".day").forEach((li) => {
+    const d = data[li.dataset.i];
+    const show = filter === "all" || (filter === "bought" ? d.bought : !d.bought);
+    li.hidden = !show;
+    if (show) shown++;
+  });
+  $("emptyList").hidden = shown > 0;
+  $("emptyList").textContent = filter === "missing" ? "Alt er købt. Godt gået! ✦" : "Intet købt endnu.";
+}
+
+function updateSummary() {
+  const bought = data.filter((d) => d.bought).length;
+  const wrapped = data.filter((d) => d.wrapped).length;
+  $("boughtNum").textContent = bought;
+  $("sBought").textContent = bought;
+  $("sMissing").textContent = 24 - bought;
+  $("sWrapped").textContent = wrapped;
+  $("ringBar").style.strokeDashoffset = 263.9 * (1 - bought / 24);
+
+  const miss = data.map((d, i) => (d.bought ? 0 : i + 1)).filter(Boolean);
+  const box = $("missingDays");
+  box.innerHTML = "";
+  if (miss.length === 0) {
+    box.textContent = "Alle 24 gaver er købt ✦";
+  } else {
+    box.append("Mangler:");
+    miss.forEach((n) => {
+      const b = document.createElement("button");
+      b.type = "button"; b.textContent = n; b.setAttribute("aria-label", `Gå til ${n}. december`);
+      b.onclick = () => jump(n);
+      box.appendChild(b);
+    });
+  }
+
+  const cd = $("countdown");
+  const first = new Date(YEAR, 11, 1);
+  const days = Math.ceil((first - new Date(now.getFullYear(), now.getMonth(), now.getDate())) / 864e5);
+  if (days > 1) cd.textContent = `${days} dage til første låge`;
+  else if (days === 1) cd.textContent = "Første låge åbner i morgen";
+  else if (todayDay && todayDay <= 24) cd.textContent = `I dag åbner mor låge ${todayDay}`;
+  else cd.textContent = "";
+}
+
+function refreshRow(li) {
+  const d = data[li.dataset.i];
+  li.classList.toggle("bought", d.bought);
+  const tag = li.querySelector(".tag");
+  tag.className = "tag " + status(d);
+  tag.textContent = statusText[status(d)];
+  li.querySelectorAll(".toggle").forEach((b) => b.setAttribute("aria-pressed", d[b.dataset.k]));
+}
+
+function jump(n) {
+  if (filter !== "all") setFilter("all");
+  const li = $("dag-" + n);
+  li.scrollIntoView({ behavior: "smooth", block: "center" });
+  li.classList.remove("flash"); void li.offsetWidth; li.classList.add("flash");
+}
+
+list.addEventListener("input", (e) => {
+  if (e.target.tagName !== "TEXTAREA") return;
+  const li = e.target.closest(".day");
+  data[li.dataset.i][e.target.dataset.k] = e.target.value;
+  grow(e.target);
+  save(); refreshRow(li);
+});
+list.addEventListener("click", (e) => {
+  const b = e.target.closest(".toggle");
+  if (!b) return;
+  const li = b.closest(".day");
+  const d = data[li.dataset.i];
+  d[b.dataset.k] = !d[b.dataset.k];
+  save(); refreshRow(li); updateSummary();
+  if (filter !== "all") setTimeout(applyFilter, 350);
+});
+
+function setFilter(f) {
+  filter = f;
+  document.querySelectorAll(".filters button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.filter === f));
+  applyFilter();
+  const top = document.querySelector(".filters").offsetTop;
+  if (window.scrollY > top) window.scrollTo({ top, behavior: "smooth" });
+}
+document.querySelectorAll(".filters button").forEach((b) => (b.onclick = () => setFilter(b.dataset.filter)));
+
+function toast(msg) {
+  const t = $("toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("show"), 2200);
+}
+
+function esc(s) { return s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+
+$("printBtn").onclick = () => {
+  const bought = data.filter((d) => d.bought).length;
+  $("print").innerHTML = `<h2>Julekalender til mor</h2><p>${bought} af 24 købt · ${24 - bought} mangler</p>
+    <table><thead><tr><th>Dato</th><th>Idé</th><th>Gaven</th><th>Købt</th><th>Mangler</th><th>Pakket</th></tr></thead><tbody>
+    ${data.map((d, i) => `<tr><td class="d">${i + 1}. december</td><td>${esc(d.idea)}</td><td>${esc(d.gift)}</td><td class="c">${d.bought ? "X" : ""}</td><td class="c">${d.bought ? "" : "X"}</td><td class="c">${d.wrapped ? "X" : ""}</td></tr>`).join("")}
+    </tbody></table>`;
+  window.print();
+};
+
+$("shareBtn").onclick = async () => {
+  const text = "Julekalender til mor\n\n" + data.map((d, i) => `${i + 1}. dec: ${d.gift.trim() || d.idea.trim() || "(ingen idé endnu)"}${d.bought ? " ✓ købt" : " – mangler"}`).join("\n");
+  try {
+    if (navigator.share) { await navigator.share({ title: "Julekalender til mor", text }); return; }
+    await navigator.clipboard.writeText(text);
+    toast("Listen er kopieret");
+  } catch (e) { if (e.name !== "AbortError") toast("Kunne ikke dele listen"); }
+};
+
+$("backupBtn").onclick = () => {
+  const blob = new Blob([JSON.stringify({ julekalender: data }, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `julekalender-${YEAR}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+};
+
+$("restoreInput").onchange = async (e) => {
+  const f = e.target.files[0];
+  e.target.value = "";
+  if (!f) return;
+  try {
+    const d = JSON.parse(await f.text()).julekalender;
+    if (!Array.isArray(d) || d.length !== 24) throw new Error();
+    if (!confirm("Erstat den nuværende liste med sikkerhedskopien?")) return;
+    data = d.map(clean);
+    save(); render(); toast("Sikkerhedskopien er hentet");
+  } catch (err) { toast("Filen kunne ikke læses"); }
+};
+
+$("resetBtn").onclick = () => {
+  if (!confirm("Vil du slette alle 24 gaver og starte forfra?")) return;
+  data = Array.from({ length: 24 }, () => clean({}));
+  save(); render(); toast("Listen er ryddet");
+};
+
+render();
+if (todayDay && todayDay <= 24) setTimeout(() => $("dag-" + todayDay).scrollIntoView({ block: "center" }), 300);
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+</script>
+</body>
+</html>

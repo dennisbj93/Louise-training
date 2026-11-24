@@ -16,3 +16,7 @@ Hele appen ligger i `index.html` og kræver ingen build. Åbn filen i en browser
 - Guide til "Føj til hjemmeskærm" på iPhone (og knap til at installere på Android).
 - Øvelserne bruger håndvægte og kettlebell. Hver øvelse har SATS' egen instruktionsvideo (som SATS hoster på YouTube) indlejret direkte, og under træningen kører videoen af den aktuelle øvelse automatisk i loop uden lyd. YouTube-id'erne står i `PASSES` i `index.html` (feltet `yt`), fundet via "Start video" på sats.dk/ovelser.
 - App-layout med menu i bunden (I dag, Programmer, Fremskridt, Mere), timer i fuld skærm med ring, og fejring når et pas er gennemført.
+
+## Julekalender til mor
+
+`julekalender/` er en separat lille app (https://louise-training.pages.dev/julekalender/) til de 24 gaver fra 1. til 24. december: idé og gave pr. dag, købt/pakket ind, overblik over hvad der mangler, print og sikkerhedskopi. Gemmes i browseren på telefonen og kan lægges på hjemmeskærmen som sin egen app.
