@@ -179,6 +179,46 @@ textarea:focus { outline: none; border-bottom-color: var(--accent); }
 }
 .toast.show { visibility: visible; opacity: 1; transform: translateX(-50%); }
 
+/* Pc: liste/tabel-visning */
+.thead { display: none; }
+@media (min-width: 820px) {
+  .wrap { max-width: 1180px; }
+  header { margin-bottom: 26px; }
+  .summary { grid-template-columns: auto auto 1fr; }
+  .missing-days { grid-column: auto; align-self: center; }
+  .filters { max-width: 420px; }
+  .thead, .day { grid-template-columns: 40px 150px minmax(0, 1fr) minmax(0, 1fr) 110px 232px; column-gap: 14px; }
+  .thead {
+    display: grid; padding: 8px 14px 8px 12px; font-size: 11px; font-weight: 600; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--line);
+  }
+  .days {
+    gap: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; overflow: hidden;
+  }
+  .day { border: 0; border-radius: 0; border-bottom: 1px solid var(--line); padding: 8px 14px 8px 12px; align-items: center; row-gap: 0; }
+  .day:last-child { border-bottom: 0; }
+  .day:nth-child(even) { background: color-mix(in srgb, var(--bg) 55%, var(--surface)); }
+  .day.today { box-shadow: inset 4px 0 0 var(--gold); }
+  .day > div:not(.badge), .meta { display: contents; }
+  .badge { width: 40px; height: 40px; border-radius: 11px; font-size: 22px; align-self: center; }
+  .day.bought .badge::after { width: 16px; height: 16px; line-height: 16px; font-size: 10px; right: -4px; bottom: -4px; }
+  .meta > span:first-child { grid-column: 2; grid-row: 1; font-size: 14px; color: var(--muted); }
+  .field { grid-row: 1; display: block; }
+  .field:has([data-k=idea]) { grid-column: 3; }
+  .field:has([data-k=gift]) { grid-column: 4; }
+  .field > span { display: none; }
+  .meta .tag { grid-column: 5; grid-row: 1; font-size: 13px; }
+  .toggles { grid-column: 6; grid-row: 1; flex-wrap: nowrap; justify-content: flex-end; }
+  textarea { margin: 0; font-size: 18px; min-height: 30px; border-bottom-color: transparent; }
+  textarea.idea { font-size: 15px; margin: 0; }
+  .day:hover textarea { border-bottom-color: var(--line); }
+  .toggle { padding: 4px 10px 4px 6px; min-height: 32px; font-size: 13px; }
+  .empty-list { background: var(--surface); }
+  .tools { grid-template-columns: repeat(5, 1fr); }
+  .tools .primary { grid-column: auto; }
+}
+.day[hidden] { display: none !important; }
+
 /* Print */
 #print { display: none; }
 @media print {
@@ -227,6 +267,7 @@ textarea:focus { outline: none; border-bottom-color: var(--accent); }
     <button type="button" data-filter="bought" aria-pressed="false">Købt</button>
   </nav>
 
+  <div class="thead" aria-hidden="true"><span></span><span>Dato</span><span>Idé</span><span>Gave</span><span>Status</span><span></span></div>
   <ol class="days" id="days"></ol>
   <p class="empty-list" id="emptyList" hidden></p>
 
